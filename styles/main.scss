@@ -1,0 +1,47 @@
+@import '~bulma/bulma';
+@import 'vars';
+
+body {
+  background: #f8f8f8;
+  font-family: 'Work Sans', sans-serif;
+}
+
+a {
+  color: $ir-blue;
+  text-decoration: underline;
+  transition: all .3s ease-in-out;
+
+  &:hover {
+    color: darken($ir-blue, 10%);
+    text-decoration: none;
+  }
+}
+
+h1 {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.home-section {
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 400px;
+  padding: 0 40px;
+  border-bottom: 8px solid #ddd;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+p {
+  font-size: 20px;
+  color: #2a2a2a;
+}
