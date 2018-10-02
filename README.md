@@ -1,6 +1,6 @@
-# infinite-robots-homepage
+# Infinite Robots Homepage
 
-> Infinite Robots Homepage
+Join our discord for more info: https://discord.gg/rUSdYxV
 
 ## Build Setup
 
