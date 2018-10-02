@@ -2,6 +2,10 @@
 
 Join our discord for more info: https://discord.gg/rUSdYxV
 
+## Link
+
+Site is viewable at https://infiniterobots.xyz/
+
 ## Build Setup
 
 ``` bash
