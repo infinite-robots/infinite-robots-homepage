@@ -15,7 +15,8 @@ export default {
   data() {
     return {
       members: [
-        'drew'
+        'drew',
+        'cadeng150'
       ]
     }
   }
