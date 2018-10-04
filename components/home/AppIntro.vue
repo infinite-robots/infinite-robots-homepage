@@ -1,6 +1,10 @@
 <template>
   <section class="home-section app-intro">
-    <img src="~/assets/logo-text-square-transparent.png" />
+    <div class="content intro">
+      <center>
+        <img src="~/assets/logo-text-square-transparent.png"/>
+      </center>
+    </div>
   </section>
 </template>
 
