@@ -5,7 +5,7 @@
       <ul>
         <li v-for="member in members" :key="member">{{member}}</li>
       </ul>
-      <p>Want to join the Infinite Robots? Just join our discord and open a pull request on github to add yourself to the members list!</p>
+      <p>Want to join the Infinite Robots? Just join our <a href="https://discord.gg/WdWARZA">discord</a> and open a pull request on <a href="https://github.com/infinite-robots/infinite-robots-homepage/edit/master/components/home/AppMembers.vue">github</a> to add yourself to the members list!</p>
     </div>
   </section>
 </template>
@@ -15,8 +15,8 @@ export default {
   data() {
     return {
       members: [
-        'drew',
-        'cadeng150'
+        'Drew W.',
+        'Rian W.'
       ]
     }
   }
