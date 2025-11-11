@@ -1,28 +1,53 @@
-const SERVICES = [
+import type { LucideIcon } from "lucide-react";
+import {
+  Globe,
+  Megaphone,
+  PenTool,
+  Share2,
+  Smartphone,
+  Workflow,
+} from "lucide-react";
+
+const SERVICES: Array<{
+  title: string;
+  description: string;
+  icon: LucideIcon;
+}> = [
   {
     title: "Website Development",
     description:
       "Professional websites that load fast, look great, and clearly explain what you do. Designed to convert visitors into customers.",
+    icon: Globe,
   },
   {
     title: "App Development",
     description:
       "Mobile apps built for real-world usage with clean design and long-term maintainability. For iOS, Android, or cross-platform.",
+    icon: Smartphone,
   },
   {
     title: "Social Media Management",
     description:
-      "Stay active and present online &mdash; without doing everything yourself. We handle content planning, posting, and reporting.",
+      "Stay active and present online, without doing everything yourself. We handle content planning, posting, and reporting.",
+    icon: Share2,
   },
   {
     title: "Ads Management",
     description:
       "Targeted ad campaigns across Google, Facebook/Instagram, and TikTok that focus on measurable leads and sales.",
+    icon: Megaphone,
   },
   {
     title: "Operations Tools & Workflow Improvements",
     description:
-      "We identify the parts of your business that take too much time &mdash; and build tools that automate and simplify those workflows.",
+      "We identify the parts of your business that take too much time and build tools that automate and simplify those workflows.",
+    icon: Workflow,
+  },
+  {
+    title: "Brand & Content Strategy",
+    description:
+      "Clarify your message and voice with a content playbook, visual direction, and repeatable storytelling frameworks your team can run with.",
+    icon: PenTool,
   },
 ];
 
@@ -35,20 +60,27 @@ export function ServicesOverview() {
             <h2 className="text-3xl font-semibold text-zinc-900">What We Do</h2>
           </div>
 
-          <div className="flex flex-col gap-16">
-            {SERVICES.map((service) => (
-              <div
-                key={service.title}
-                className="grid gap-y-3 text-left md:grid-cols-[minmax(220px,280px)_minmax(0,1fr)] md:gap-x-12 md:gap-y-0 md:items-baseline"
-              >
-                <h3 className="text-lg font-semibold text-zinc-900">
-                  {service.title}
-                </h3>
-                <p className="text-base leading-relaxed text-zinc-600">
-                  {service.description}
-                </p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8">
+            {SERVICES.map((service) => {
+              const Icon = service.icon;
+              return (
+                <div
+                  key={service.title}
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:border-zinc-300 hover:shadow-lg"
+                >
+                  <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#507883] text-white transition-colors">
+                    <Icon aria-hidden="true" className="h-6 w-6" />
+                  </span>
+                  <h3 className="text-xl font-semibold text-zinc-900">
+                    {service.title}
+                  </h3>
+                  <p className="mt-3 text-base leading-relaxed text-zinc-600">
+                    {service.description}
+                  </p>
+                  <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1 rounded-b-2xl bg-[#507883] opacity-0 transition-opacity group-hover:opacity-100" />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

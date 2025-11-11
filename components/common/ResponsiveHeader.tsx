@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", showDesktop: false },
@@ -16,6 +17,7 @@ const NAV_ITEMS = [
 export function ResponsiveHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileNavId = useId();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -55,7 +57,11 @@ export function ResponsiveHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="font-bold uppercase text-zinc-100 transition-colors hover:text-white"
+                className={`font-bold text-lg transition-colors ${
+                  pathname === item.href
+                    ? "text-[#006cdd]"
+                    : "text-zinc-100 hover:text-white"
+                }`}
               >
                 {item.label}
               </Link>
@@ -94,7 +100,11 @@ export function ResponsiveHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="transition-colors hover:text-white"
+                className={`transition-colors ${
+                  pathname === item.href
+                    ? "text-[#006cdd]"
+                    : "text-zinc-100 hover:text-white"
+                }`}
                 onClick={() => setMobileOpen(false)}
                 tabIndex={mobileOpen ? 0 : -1}
                 aria-hidden={!mobileOpen}

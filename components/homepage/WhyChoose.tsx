@@ -4,7 +4,7 @@ const POINTS = [
   "Websites built for real business goals, not just looks.",
   "Scalable systems that won't need to be rebuilt later.",
   "Clear, straightforward communication at every step.",
-  "Long-term support &mdash; we don't disappear after launch.",
+  "Long-term support — we don't disappear after launch.",
 ];
 
 export function WhyChoose() {
