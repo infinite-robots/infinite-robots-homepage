@@ -21,7 +21,7 @@ const socialLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-[#0e131b] py-14 text-zinc-400">
+    <footer className="bg-brand-dark py-14 text-zinc-400">
       <div className="container mx-auto flex flex-col items-center gap-10 px-6">
         <Link
           href="/"

@@ -1,11 +1,11 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  Bot,
   Globe,
   Megaphone,
   PenTool,
   Share2,
   Smartphone,
-  Workflow,
 } from "lucide-react";
 
 const SERVICES: Array<{
@@ -26,6 +26,12 @@ const SERVICES: Array<{
     icon: Smartphone,
   },
   {
+    title: "Agentic Operations Assistants",
+    description:
+      "We craft proactive, AI-powered helpers that plug into your existing tools, handle repetitive tasks end-to-end, and flag only what needs your attention.",
+    icon: Bot,
+  },
+  {
     title: "Social Media Management",
     description:
       "Stay active and present online, without doing everything yourself. We handle content planning, posting, and reporting.",
@@ -36,12 +42,6 @@ const SERVICES: Array<{
     description:
       "Targeted ad campaigns across Google, Facebook/Instagram, and TikTok that focus on measurable leads and sales.",
     icon: Megaphone,
-  },
-  {
-    title: "Operations Tools & Workflow Improvements",
-    description:
-      "We identify the parts of your business that take too much time and build tools that automate and simplify those workflows.",
-    icon: Workflow,
   },
   {
     title: "Brand & Content Strategy",
@@ -68,7 +68,7 @@ export function ServicesOverview() {
                   key={service.title}
                   className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:border-zinc-300 hover:shadow-lg"
                 >
-                  <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#507883] text-white transition-colors">
+                  <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-accent text-white transition-colors">
                     <Icon aria-hidden="true" className="h-6 w-6" />
                   </span>
                   <h3 className="text-xl font-semibold text-zinc-900">
@@ -77,7 +77,7 @@ export function ServicesOverview() {
                   <p className="mt-3 text-base leading-relaxed text-zinc-600">
                     {service.description}
                   </p>
-                  <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1 rounded-b-2xl bg-[#507883] opacity-0 transition-opacity group-hover:opacity-100" />
+                  <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1 rounded-b-2xl bg-brand-accent opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
               );
             })}

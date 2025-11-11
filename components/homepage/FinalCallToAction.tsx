@@ -7,7 +7,7 @@ export function FinalCallToAction() {
         </h2>
         <a
           href="mailto:hello@infiniterobots.com"
-          className="rounded-full bg-[#006cdd] px-10 py-3 text-base font-semibold text-white transition-colors hover:bg-[#005bb7]"
+          className="rounded-full bg-brand px-10 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-strong"
         >
           Book a Consultation
         </a>

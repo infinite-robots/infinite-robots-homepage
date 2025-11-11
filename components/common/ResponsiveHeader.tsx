@@ -31,7 +31,7 @@ export function ResponsiveHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0e131b]">
+    <header className="sticky top-0 z-50 bg-brand-dark">
       <div className="container mx-auto flex h-16 items-stretch justify-between pl-3 pr-6">
         <Link
           href="/"
@@ -57,9 +57,9 @@ export function ResponsiveHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`font-bold text-lg transition-colors ${
+                className={`font-bold text-base transition-colors ${
                   pathname === item.href
-                    ? "text-[#006cdd]"
+                    ? "text-brand-accent"
                     : "text-zinc-100 hover:text-white"
                 }`}
               >
@@ -86,7 +86,7 @@ export function ResponsiveHeader() {
       </div>
 
       <div
-        className={`absolute inset-x-0 top-full z-40 origin-top transform border-y border-white/10 bg-[#0e131b] pb-6 pt-4 shadow-lg transition-all duration-200 ease-out md:hidden ${
+        className={`absolute inset-x-0 top-full z-40 origin-top transform border-y border-white/10 bg-brand-dark pb-6 pt-4 shadow-lg transition-all duration-200 ease-out md:hidden ${
           mobileOpen
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-2 opacity-0"
@@ -102,7 +102,7 @@ export function ResponsiveHeader() {
                 href={item.href}
                 className={`transition-colors ${
                   pathname === item.href
-                    ? "text-[#006cdd]"
+                    ? "text-brand"
                     : "text-zinc-100 hover:text-white"
                 }`}
                 onClick={() => setMobileOpen(false)}

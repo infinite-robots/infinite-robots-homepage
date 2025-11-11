@@ -15,15 +15,9 @@ export function HeroSection() {
         <div className="flex flex-col gap-3 sm:flex-row">
           <a
             href="#contact"
-            className="rounded-full bg-[#006cdd] px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-[#005bb7]"
+            className="rounded-full bg-brand px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-strong"
           >
-            Book a Consultation
-          </a>
-          <a
-            href="#services"
-            className="rounded-full border border-zinc-300 px-8 py-3 text-base font-semibold text-zinc-800 transition-colors hover:border-zinc-400 hover:text-zinc-950"
-          >
-            View Our Work
+            Schedule a Consultation
           </a>
         </div>
       </div>
