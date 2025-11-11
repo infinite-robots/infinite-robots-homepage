@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { ResponsiveHeader } from "@/components/common/ResponsiveHeader";
 import { SiteFooter } from "@/components/common/SiteFooter";
 import type { Metadata, Viewport } from "next";
@@ -11,7 +12,7 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Infinite Robots | Better Websites That Perform",
+  title: "Infinite Robots - Better Websites That Perform",
   description:
     "Infinite Robots designs and builds high-performing websites, apps, and digital systems that help businesses grow with clarity and confidence.",
   manifest: "/site.webmanifest",
@@ -44,6 +45,7 @@ export default function RootLayout({
         <div className="flex min-h-screen flex-col">
           <ResponsiveHeader />
           <div className="flex-1">{children}</div>
+          <Analytics />
           <SiteFooter />
         </div>
       </body>
