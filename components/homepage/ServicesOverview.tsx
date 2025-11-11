@@ -26,7 +26,7 @@ const SERVICES: Array<{
     icon: Smartphone,
   },
   {
-    title: "Agentic Operations Assistants",
+    title: "Agentic Development",
     description:
       "We craft proactive, AI-powered helpers that plug into your existing tools, handle repetitive tasks end-to-end, and flag only what needs your attention.",
     icon: Bot,

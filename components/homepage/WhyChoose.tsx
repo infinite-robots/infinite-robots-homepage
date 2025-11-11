@@ -32,12 +32,13 @@ export function WhyChoose() {
             </ul>
           </div>
 
-          <div className="relative h-80 w-full overflow-hidden rounded-3xl md:h-full">
+          <div className="flex w-full justify-center">
             <Image
               src="/robot1.jpg"
               alt="Illustration of Infinite Robots partnership"
-              fill
-              className="object-cover"
+              width={840}
+              height={960}
+              className="h-auto w-full max-w-[420px] rounded-3xl"
               sizes="(min-width: 768px) 420px, 100vw"
               priority={false}
             />
