@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function HeroSection() {
   return (
     <section
@@ -16,12 +18,12 @@ export function HeroSection() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <a
-            href="#contact"
+          <Link
+            href="/contact"
             className="rounded-full bg-brand px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-strong"
           >
             Schedule a Consultation
-          </a>
+          </Link>
         </div>
       </div>
     </section>

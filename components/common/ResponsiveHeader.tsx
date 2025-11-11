@@ -69,7 +69,7 @@ export function ResponsiveHeader() {
           )}
           <Link
             href="/contact"
-            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
+            className="rounded-full bg-brand px-5 py-2 text-base font-bold text-white transition-colors hover:bg-brand-strong"
           >
             Get Started
           </Link>
