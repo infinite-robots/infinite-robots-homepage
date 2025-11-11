@@ -1,3 +1,5 @@
+import { ResponsiveHeader } from "@/components/common/ResponsiveHeader";
+import { SiteFooter } from "@/components/common/SiteFooter";
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
@@ -21,7 +23,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${nunitoSans.variable} antialiased`}>{children}</body>
+      <body
+        className={`${nunitoSans.variable} bg-white text-zinc-900 antialiased`}
+      >
+        <div className="flex min-h-screen flex-col">
+          <ResponsiveHeader />
+          <div className="flex-1">{children}</div>
+          <SiteFooter />
+        </div>
+      </body>
     </html>
   );
 }

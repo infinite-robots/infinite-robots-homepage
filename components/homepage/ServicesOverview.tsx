@@ -28,28 +28,29 @@ const SERVICES = [
 
 export function ServicesOverview() {
   return (
-    <section
-      id="services"
-      className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-6 py-24"
-    >
-      <div className="max-w-2xl">
-        <h2 className="text-3xl font-semibold text-zinc-900">What We Do</h2>
-      </div>
-
-      <div className="flex flex-col gap-12">
-        {SERVICES.map((service) => (
-          <div
-            key={service.title}
-            className="grid gap-4 md:grid-cols-[minmax(220px,1fr)_2fr] md:items-start"
-          >
-            <h3 className="text-lg font-semibold text-zinc-900">
-              {service.title}
-            </h3>
-            <p className="text-base leading-relaxed text-zinc-600">
-              {service.description}
-            </p>
+    <section id="services" className="py-24">
+      <div className="container mx-auto px-6">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-semibold text-zinc-900">What We Do</h2>
           </div>
-        ))}
+
+          <div className="flex flex-col gap-16">
+            {SERVICES.map((service) => (
+              <div
+                key={service.title}
+                className="grid gap-y-3 text-left md:grid-cols-[minmax(220px,280px)_minmax(0,1fr)] md:gap-x-12 md:gap-y-0 md:items-baseline"
+              >
+                <h3 className="text-lg font-semibold text-zinc-900">
+                  {service.title}
+                </h3>
+                <p className="text-base leading-relaxed text-zinc-600">
+                  {service.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
