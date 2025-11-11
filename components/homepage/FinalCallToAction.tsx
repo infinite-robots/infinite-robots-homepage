@@ -9,7 +9,7 @@ export function FinalCallToAction() {
           href="mailto:hello@infiniterobots.com"
           className="rounded-full bg-brand px-10 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-strong"
         >
-          Book a Consultation
+          Schedule a Consultation
         </a>
       </div>
     </section>
