@@ -67,6 +67,12 @@ export function ResponsiveHeader() {
               </Link>
             )
           )}
+          <Link
+            href="/contact"
+            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
+          >
+            Get Started
+          </Link>
         </nav>
 
         <button
