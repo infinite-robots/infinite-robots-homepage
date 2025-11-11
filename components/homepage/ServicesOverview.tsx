@@ -30,7 +30,7 @@ export function ServicesOverview() {
   return (
     <section id="services" className="py-24">
       <div className="container mx-auto px-6">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12">
+        <div className="flex flex-col gap-12">
           <div className="max-w-2xl">
             <h2 className="text-3xl font-semibold text-zinc-900">What We Do</h2>
           </div>

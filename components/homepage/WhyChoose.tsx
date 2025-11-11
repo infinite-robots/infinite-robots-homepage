@@ -11,7 +11,7 @@ export function WhyChoose() {
   return (
     <section id="why-us" className="py-24">
       <div className="container mx-auto px-6">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_minmax(320px,0.8fr)] md:items-center">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_minmax(320px,0.8fr)] md:items-center">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">
               <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
