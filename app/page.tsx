@@ -7,7 +7,7 @@ import { WhyChoose } from "@/components/homepage/WhyChoose";
 
 export default function Home() {
   return (
-    <main className="flex flex-col gap-0 bg-white text-zinc-900">
+    <main className="flex flex-col gap-0 bg-white text-zinc-900 transition-colors duration-300 dark:bg-zinc-950 dark:text-zinc-100">
       <HeroSection />
       <ValueStripe />
       <ServicesOverview />

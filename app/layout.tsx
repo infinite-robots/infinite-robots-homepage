@@ -1,9 +1,13 @@
 import { Analytics } from "@vercel/analytics/next";
 import { ResponsiveHeader } from "@/components/common/ResponsiveHeader";
 import { SiteFooter } from "@/components/common/SiteFooter";
+import { ThemeProvider } from "@/components/common/ThemeProvider";
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
+
+const themeInitScript = `(function () { try { var storageKey = "ir-theme"; var className = "dark"; var root = document.documentElement; var stored = window.localStorage.getItem(storageKey); var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches; var theme = stored === "light" || stored === "dark" ? stored : prefersDark ? "dark" : "light"; root.classList.toggle(className, theme === "dark"); root.dataset.theme = theme; root.style.colorScheme = theme; } catch (error) {} })();`;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -30,7 +34,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b1120" },
+  ],
 };
 
 export default function RootLayout({
@@ -39,14 +46,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={nunitoSans.variable}>
-      <body className="bg-white font-sans text-zinc-900 antialiased">
-        <div className="flex min-h-screen flex-col">
-          <ResponsiveHeader />
-          <div className="flex-1">{children}</div>
-          <Analytics />
-          <SiteFooter />
-        </div>
+    <html lang="en" className={nunitoSans.variable} suppressHydrationWarning>
+      <body className="bg-white font-sans text-zinc-900 antialiased transition-colors duration-300 dark:bg-zinc-950 dark:text-zinc-100">
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
+        <ThemeProvider>
+          <div className="flex min-h-screen flex-col">
+            <ResponsiveHeader />
+            <div className="flex-1">{children}</div>
+            <Analytics />
+            <SiteFooter />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

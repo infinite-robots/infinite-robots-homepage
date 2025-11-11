@@ -53,11 +53,13 @@ const SERVICES: Array<{
 
 export function ServicesOverview() {
   return (
-    <section id="services" className="py-24">
+    <section id="services" className="py-24 transition-colors duration-300">
       <div className="container mx-auto px-6">
         <div className="flex flex-col gap-12">
           <div className="max-w-2xl">
-            <h2 className="text-3xl font-semibold text-zinc-900">What We Do</h2>
+            <h2 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
+              What We Do
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8">
@@ -66,15 +68,15 @@ export function ServicesOverview() {
               return (
                 <div
                   key={service.title}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:border-zinc-300 hover:shadow-lg"
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-zinc-700 dark:hover:bg-zinc-900/80"
                 >
                   <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-accent text-white transition-colors">
                     <Icon aria-hidden="true" className="h-6 w-6" />
                   </span>
-                  <h3 className="text-xl font-semibold text-zinc-900">
+                  <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
                     {service.title}
                   </h3>
-                  <p className="mt-3 text-base leading-relaxed text-zinc-600">
+                  <p className="mt-3 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
                     {service.description}
                   </p>
                   <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1 rounded-b-2xl bg-brand-accent opacity-0 transition-opacity group-hover:opacity-100" />
