@@ -1,3 +1,4 @@
+import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 
 const testimonials = [
@@ -36,7 +37,7 @@ export default function TestimonialsPage() {
       />
 
       <section className="relative overflow-hidden py-20">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-brand-strong/20 via-brand-dark/60 to-black/40 blur-3xl opacity-60 dark:opacity-80" />
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-br from-brand-strong/20 via-brand-dark/60 to-black/40 blur-3xl opacity-60 dark:opacity-80" />
         <div className="container mx-auto px-6">
           <div className="grid gap-8 md:grid-cols-2">
             {testimonials.map((testimonial) => (
@@ -117,6 +118,8 @@ export default function TestimonialsPage() {
           </div>
         </div>
       </section>
+
+      <FooterSpeechBubble message="Ready to create your own success story?" />
     </main>
   );
 }

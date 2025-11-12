@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 
 export default function AboutPage() {
@@ -210,6 +211,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <FooterSpeechBubble message="Let’s design the systems that keep your team moving." />
     </main>
   );
 }

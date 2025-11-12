@@ -1,3 +1,4 @@
+import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 
 export default function ContactPage() {
@@ -8,7 +9,7 @@ export default function ContactPage() {
         description="We'd love to learn what you're working on and explore how we can help."
       />
 
-      <section className="border-b border-zinc-100 dark:border-zinc-800">
+      <section>
         <div className="container mx-auto px-6 py-12 md:py-16">
           <p className="mx-auto max-w-3xl text-center text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
             We respond to all inquiries within one business day.
@@ -131,13 +132,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="py-12">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-sm font-medium tracking-wide text-zinc-500 dark:text-zinc-400">
-            We look forward to working with you.
-          </p>
-        </div>
-      </section>
+      <FooterSpeechBubble message="We look forward to working with you." />
     </main>
   );
 }

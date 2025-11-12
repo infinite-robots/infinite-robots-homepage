@@ -1,3 +1,4 @@
+import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { FinalCallToAction } from "@/components/homepage/FinalCallToAction";
 import { HeroSection } from "@/components/homepage/HeroSection";
 import { ProcessOverview } from "@/components/homepage/ProcessOverview";
@@ -14,6 +15,7 @@ export default function Home() {
       <WhyChoose />
       <ProcessOverview />
       <FinalCallToAction />
+      <FooterSpeechBubble message="We help you harness the power of Infinite Robots." />
     </main>
   );
 }

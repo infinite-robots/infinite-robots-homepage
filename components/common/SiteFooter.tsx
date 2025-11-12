@@ -87,7 +87,7 @@ function ThemeToggle() {
 
 export function SiteFooter() {
   return (
-    <footer className="bg-brand-dark py-14 text-zinc-300 transition-colors duration-300">
+    <footer className="bg-brand-dark pt-8 pb-16 text-zinc-300 transition-colors duration-300">
       <div className="container mx-auto flex flex-col items-center gap-10 px-6">
         <Link
           href="/"
