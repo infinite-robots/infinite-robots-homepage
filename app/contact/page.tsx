@@ -1,13 +1,143 @@
+import { SlimPageHeader } from "@/components/common/SlimPageHeader";
+
 export default function ContactPage() {
   return (
-    <main className="bg-brand-dark text-white">
-      <div className="container mx-auto px-6 py-24">
-        <h1 className="text-3xl font-semibold">Contact</h1>
-        <p className="mt-6 max-w-2xl text-lg text-zinc-300">
-          Let&apos;s connect. While we build out this page, send us a note and
-          we&apos;ll follow up right away.
-        </p>
-      </div>
+    <main className="bg-white text-zinc-900 transition-colors duration-300 dark:bg-brand-dark dark:text-zinc-100">
+      <SlimPageHeader
+        title="Contact"
+        description="We'd love to learn what you're working on and explore how we can help."
+      />
+
+      <section className="border-b border-zinc-100 dark:border-zinc-800">
+        <div className="container mx-auto px-6 py-12 md:py-16">
+          <p className="mx-auto max-w-3xl text-center text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+            We respond to all inquiries within one business day.
+          </p>
+
+          <form className="mt-10 mx-auto max-w-3xl space-y-8">
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="name"
+                className="text-sm font-medium text-zinc-700 dark:text-zinc-200"
+              >
+                Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+                placeholder="Your name"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-zinc-700 dark:text-zinc-200"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+                placeholder="you@company.com"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="company"
+                className="text-sm font-medium text-zinc-700 dark:text-zinc-200"
+              >
+                Company
+              </label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                autoComplete="organization"
+                className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+                placeholder="Company name"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="project-details"
+                className="text-sm font-medium text-zinc-700 dark:text-zinc-200"
+              >
+                What are you looking to do?
+              </label>
+              <textarea
+                id="project-details"
+                name="projectDetails"
+                rows={4}
+                className="w-full resize-none rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+                placeholder="Share a little about your goals or what you need help with."
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="referral-source"
+                className="text-sm font-medium text-zinc-700 dark:text-zinc-200"
+              >
+                How did you hear about us?{" "}
+                <span className="font-normal text-zinc-500">(optional)</span>
+              </label>
+              <select
+                id="referral-source"
+                name="referralSource"
+                className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select an option
+                </option>
+                <option value="referral">Referral</option>
+                <option value="social">Social media</option>
+                <option value="search">Search engine</option>
+                <option value="event">Event or meetup</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center rounded-full bg-brand px-10 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-strong focus:outline-none focus:ring-2 focus:ring-brand/40 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-brand-dark"
+              >
+                Send Message
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-10 mx-auto max-w-3xl space-y-3 text-center text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            <p>
+              Or just send us an email directly at{" "}
+              <a
+                href="mailto:hello@infinite-robots.com"
+                className="font-medium text-brand transition-colors hover:text-brand-strong"
+              >
+                hello@infinite-robots.com
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-sm font-medium tracking-wide text-zinc-500 dark:text-zinc-400">
+            We look forward to working with you.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

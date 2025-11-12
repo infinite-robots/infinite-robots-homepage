@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 import { ServicesNavigation } from "@/components/services/ServicesNavigation";
 
 const services = [
@@ -175,20 +176,16 @@ export default function ServicesPage() {
 
   return (
     <main className="bg-white text-zinc-900 dark:bg-brand-dark dark:text-zinc-100">
-      <section className="py-16">
-        <div className="container mx-auto flex min-h-[150px] max-w-5xl flex-col items-center gap-6 px-6 text-center">
-          <div className="flex flex-col gap-3">
-            <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-              Services
-            </h1>
-            <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300 md:text-xl">
-              We help businesses communicate clearly, operate efficiently, and
-              grow consistently &mdash; through thoughtful design and dependable
-              systems.
-            </p>
-          </div>
-        </div>
-      </section>
+      <SlimPageHeader
+        title="Services"
+        description={
+          <>
+            We help businesses communicate clearly, operate efficiently, and
+            grow consistently &mdash; through thoughtful design and dependable
+            systems.
+          </>
+        }
+      />
 
       <ServicesNavigation items={navItems} />
 
@@ -199,7 +196,7 @@ export default function ServicesPage() {
             id={service.id}
             className="border-zinc-100 py-16 transition-colors duration-300 scroll-mt-32 dark:border-zinc-800 md:py-20"
           >
-            <div className="container mx-auto max-w-5xl px-6">
+            <div className="container mx-auto px-6">
               <div className="flex flex-col gap-8 md:gap-12">
                 <div className="flex flex-col gap-4">
                   <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
@@ -238,7 +235,7 @@ export default function ServicesPage() {
       </div>
 
       <section className="border-y border-zinc-100 py-20 dark:border-zinc-800">
-        <div className="container mx-auto max-w-3xl px-6 text-center">
+        <div className="container mx-auto px-6 text-center">
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
             How We Work
           </h2>
@@ -268,7 +265,7 @@ export default function ServicesPage() {
       </section>
 
       <section className="py-24">
-        <div className="container mx-auto max-w-3xl px-6 text-center">
+        <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
             Ready to build?
           </h2>
