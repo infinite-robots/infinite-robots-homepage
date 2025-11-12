@@ -176,7 +176,7 @@ export default function ServicesPage() {
   }));
 
   return (
-    <main className="bg-white text-zinc-900 dark:bg-brand-dark dark:text-zinc-100">
+    <main className="bg-white text-zinc-900 dark:bg-brand-surface dark:text-zinc-100">
       <SlimPageHeader
         title="Services"
         description={

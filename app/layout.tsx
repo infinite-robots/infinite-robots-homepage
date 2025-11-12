@@ -47,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={nunitoSans.variable} suppressHydrationWarning>
-      <body className="bg-white font-sans text-zinc-900 antialiased transition-colors duration-300 dark:bg-zinc-950 dark:text-zinc-100">
+      <body className="bg-white font-sans text-zinc-900 antialiased transition-colors duration-300 dark:bg-brand-surface dark:text-zinc-100">
         <Script
           id="theme-init"
           strategy="beforeInteractive"

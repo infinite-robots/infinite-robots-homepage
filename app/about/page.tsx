@@ -5,7 +5,7 @@ import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 
 export default function AboutPage() {
   return (
-    <main className="bg-white text-zinc-900 dark:bg-brand-dark dark:text-zinc-100">
+    <main className="bg-white text-zinc-900 dark:bg-brand-surface dark:text-zinc-100">
       <SlimPageHeader
         title="About Us"
         description="We design and build digital systems that help businesses run smoothly, look credible, and grow at a sustainable pace, without adding operational complexity."
