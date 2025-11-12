@@ -34,7 +34,7 @@ export function WhyChoose() {
 
           <div className="flex w-full justify-center">
             <Image
-              src="/robot1.jpg"
+              src="/robo.png"
               alt="Illustration of Infinite Robots partnership"
               width={840}
               height={960}
