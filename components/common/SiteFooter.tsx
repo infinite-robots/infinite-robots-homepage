@@ -47,14 +47,14 @@ function ThemeToggle() {
   const helperMessage = !isReady
     ? "Loading theme preference..."
     : userPreference === "system"
-    ? `Following system ${systemTheme} preference`
-    : `Using ${userPreference} mode`;
+      ? `Following system ${systemTheme} preference`
+      : `Using ${userPreference} mode`;
 
   return (
     <div className="flex flex-col items-center gap-2 text-sm text-zinc-200 dark:text-zinc-300">
       <button
         type="button"
-        className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-medium transition-colors hover:border-white/25 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800/60 dark:hover:border-zinc-500 dark:hover:bg-zinc-700/80"
+        className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-medium transition-colors hover:border-white/25 hover:bg-white/10 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800/60 dark:hover:border-zinc-500 dark:hover:bg-zinc-700/80"
         onClick={toggleTheme}
         aria-label={toggleLabel}
         aria-pressed={theme === "dark"}
@@ -75,7 +75,7 @@ function ThemeToggle() {
       ) : (
         <button
           type="button"
-          className="text-xs text-zinc-400 underline-offset-4 transition hover:text-white hover:underline dark:text-zinc-500 dark:hover:text-zinc-300"
+          className="text-xs text-zinc-400 cursor-pointer underline-offset-4 transition hover:text-white hover:underline dark:text-zinc-500 dark:hover:text-zinc-300"
           onClick={() => setThemePreference("system")}
         >
           Revert to system default
