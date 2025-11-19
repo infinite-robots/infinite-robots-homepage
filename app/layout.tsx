@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ResponsiveHeader } from "@/components/common/ResponsiveHeader";
 import { SiteFooter } from "@/components/common/SiteFooter";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
@@ -58,6 +59,7 @@ export default function RootLayout({
             <ResponsiveHeader />
             <div className="flex-1">{children}</div>
             <Analytics />
+            <SpeedInsights />
             <SiteFooter />
           </div>
         </ThemeProvider>
