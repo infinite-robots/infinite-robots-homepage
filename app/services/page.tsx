@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 import { ServicesNavigation } from "@/components/services/ServicesNavigation";
 
@@ -175,7 +176,7 @@ export default function ServicesPage() {
   }));
 
   return (
-    <main className="bg-white text-zinc-900 dark:bg-brand-dark dark:text-zinc-100">
+    <main className="bg-white text-zinc-900 dark:bg-brand-surface dark:text-zinc-100">
       <SlimPageHeader
         title="Services"
         description={
@@ -283,6 +284,8 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      <FooterSpeechBubble message="Let’s scope the systems that will make the biggest impact." />
     </main>
   );
 }

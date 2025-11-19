@@ -38,7 +38,7 @@ export function ResponsiveHeader() {
           className="flex h-full items-center gap-1 text-lg font-bold tracking-tight text-white"
           onClick={() => setMobileOpen(false)}
         >
-          <span className="relative h-full w-16 flex-shrink-0 overflow-hidden">
+          <span className="relative h-full w-16 shrink-0 overflow-hidden">
             <Image
               src="/irlogo.jpg"
               alt="Infinite Robots logo"
@@ -59,8 +59,8 @@ export function ResponsiveHeader() {
                 href={item.href}
                 className={`font-bold text-base transition-colors ${
                   pathname === item.href
-                    ? "text-brand-accent"
-                    : "text-zinc-100 hover:text-white"
+                    ? "text-white"
+                    : "text-zinc-200 hover:text-zinc-100"
                 }`}
               >
                 {item.label}

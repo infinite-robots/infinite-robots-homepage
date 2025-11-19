@@ -68,7 +68,7 @@ export function ServicesOverview() {
               return (
                 <div
                   key={service.title}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-zinc-700 dark:hover:bg-zinc-900/80"
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:border-zinc-300 hover:shadow-lg dark:border-white/10 dark:bg-white/5 dark:hover:border-white/15 dark:hover:bg-white/8"
                 >
                   <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-accent text-white transition-colors">
                     <Icon aria-hidden="true" className="h-6 w-6" />

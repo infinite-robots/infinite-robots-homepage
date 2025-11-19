@@ -82,7 +82,7 @@ export function ServicesNavigation({ items }: { items: ServicesNavItem[] }) {
   }
 
   return (
-    <div className="sticky top-16 z-30 bg-zinc-50 dark:bg-zinc-900">
+    <div className="sticky top-16 z-30 bg-zinc-50 dark:bg-white/5 backdrop-blur-md">
       <div className="container mx-auto px-6">
         <nav className="grid w-full gap-2 py-2 text-sm font-semibold hidden md:grid-cols-2 lg:flex lg:justify-center lg:gap-1.5">
           {items.map((item) => {
@@ -94,7 +94,7 @@ export function ServicesNavigation({ items }: { items: ServicesNavItem[] }) {
                 className={`w-full whitespace-nowrap rounded-md px-3 py-1.5 text-center transition-colors lg:w-auto lg:rounded-none ${
                   isActive
                     ? "text-brand-strong dark:text-brand font-bold"
-                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
                 }`}
                 aria-current={isActive ? "true" : undefined}
               >

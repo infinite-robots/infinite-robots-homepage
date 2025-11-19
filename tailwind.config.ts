@@ -11,6 +11,7 @@ const config = {
           dark: "#0e131b",
           accent: "#507883",
           strong: "#005bb7",
+          surface: "#111827",
         },
       },
       fontFamily: {
