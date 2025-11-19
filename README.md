@@ -1,3 +1,5 @@
+## Infinite Robots homepage
+
 This is a [Next.js](https://nextjs.org) project for the Infinite Robots homepage.
 
 ## Prerequisites
