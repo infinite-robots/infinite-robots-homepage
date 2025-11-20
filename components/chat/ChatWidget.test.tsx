@@ -644,7 +644,8 @@ describe("ChatWidget", () => {
     // Should handle error gracefully
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to create Discord thread",
+        "Error creating Discord thread:",
+        expect.any(Error),
       );
     });
 
@@ -685,7 +686,8 @@ describe("ChatWidget", () => {
     // Should handle error gracefully
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to log message to Discord",
+        "Error logging to Discord:",
+        expect.any(Error),
       );
     });
 

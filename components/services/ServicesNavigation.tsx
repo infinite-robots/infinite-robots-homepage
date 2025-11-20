@@ -69,7 +69,7 @@ export function ServicesNavigation({ items }: { items: ServicesNavItem[] }) {
     };
 
     // Initialize activeId on mount - this is intentional
-
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     updateActiveId();
 
     window.addEventListener("scroll", handleScroll, { passive: true });

@@ -37,42 +37,35 @@ export function ChatWidget() {
   const [discordThreadId, setDiscordThreadId] = useState<string | null>(null);
   const [isOffline, setIsOffline] = useState(false);
 
-  // Load session data from localStorage on mount
-  const [initialSessionId, setInitialSessionId] = useState<string | undefined>(
-    undefined,
-  );
-  const [initialMessages, setInitialMessages] = useState<
-    ChatMessage[] | undefined
-  >(undefined);
+  // Load session data from localStorage using function initializers (SSR-safe)
+  const [initialSessionId] = useState<string | undefined>(() => {
+    if (typeof window === "undefined") return undefined;
+    return localStorage.getItem(STORAGE_KEY) || undefined;
+  });
+
+  const [initialMessages] = useState<ChatMessage[] | undefined>(() => {
+    if (typeof window === "undefined") return undefined;
+    const savedMessages = localStorage.getItem(STORAGE_MESSAGES_KEY);
+    if (!savedMessages) return undefined;
+    try {
+      const parsed = JSON.parse(savedMessages);
+      // Only keep last 10 messages
+      return parsed.slice(-MAX_STORED_MESSAGES);
+    } catch (e) {
+      console.error("Failed to parse saved messages:", e);
+      return undefined;
+    }
+  });
 
   useEffect(() => {
     // SSR safety: only access localStorage on client
     if (typeof window === "undefined") return;
 
-    // Load saved session
-    const savedSessionId = localStorage.getItem(STORAGE_KEY);
-    const savedMessages = localStorage.getItem(STORAGE_MESSAGES_KEY);
+    // Load saved thread ID (needs to be in useEffect since it's used in other effects)
     const savedThreadId = localStorage.getItem(STORAGE_THREAD_KEY);
-
-    // Initialize state from localStorage on mount - this is intentional
-    if (savedSessionId) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setInitialSessionId(savedSessionId);
-    }
-
-    if (savedMessages) {
-      try {
-        const parsed = JSON.parse(savedMessages);
-        // Only keep last 10 messages
-        const limitedMessages = parsed.slice(-MAX_STORED_MESSAGES);
-
-        setInitialMessages(limitedMessages);
-      } catch (e) {
-        console.error("Failed to parse saved messages:", e);
-      }
-    }
-
     if (savedThreadId) {
+      // Initialize thread ID from localStorage on mount - this is intentional
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDiscordThreadId(savedThreadId);
     }
   }, []);
@@ -119,7 +112,6 @@ export function ChatWidget() {
       setIsOffline(true);
     } else if (!error && status === "ready" && isOffline) {
       // No error and ready - auto-recover
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsOffline(false);
     }
   }, [error, status, isOffline]);
@@ -297,11 +289,13 @@ export function ChatWidget() {
     ) {
       const messageText = getMessageText(lastMessage as ChatMessage);
       if (messageText) {
-        // Log to Discord asynchronously - this is fire-and-forget, not a state update
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        logToDiscord(messageText, "assistant").catch((err) => {
-          console.error("Failed to log AI response to Discord:", err);
-        });
+        // Log to Discord asynchronously - defer to avoid React warning about setState in effects
+        // This is fire-and-forget logging that may update state asynchronously in error handlers
+        setTimeout(() => {
+          logToDiscord(messageText, "assistant").catch((err) => {
+            console.error("Failed to log AI response to Discord:", err);
+          });
+        }, 0);
       }
     }
 
