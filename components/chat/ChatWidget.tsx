@@ -1,19 +1,14 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import { Bot, Send } from "lucide-react";
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useChatContext } from "@/components/chat/ChatContext";
+import { useAIGateway } from "@/hooks/useAIGateway";
+import { useDiscord } from "@/hooks/useDiscord";
 
 /**
  * Chat Widget component with AI integration and Discord logging
  */
-
-const STORAGE_KEY = "ir-chat-session";
-const STORAGE_MESSAGES_KEY = "ir-chat-messages";
-const STORAGE_THREAD_KEY = "ir-discord-thread";
-const MAX_STORED_MESSAGES = 10;
 
 // Type for message parts
 type MessagePart = {
@@ -34,119 +29,16 @@ export function ChatWidget() {
   const { isOpen } = useChatContext();
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [discordThreadId, setDiscordThreadId] = useState<string | null>(null);
-  const [isOffline, setIsOffline] = useState(false);
 
-  // Load session data from localStorage using function initializers (SSR-safe)
-  const [initialSessionId] = useState<string | undefined>(() => {
-    if (typeof window === "undefined") return undefined;
-    return localStorage.getItem(STORAGE_KEY) || undefined;
-  });
+  // Use AI Gateway hook for chat functionality
+  const { messages, sendMessage, status, error, id: chatId } = useAIGateway();
 
-  const [initialMessages] = useState<ChatMessage[] | undefined>(() => {
-    if (typeof window === "undefined") return undefined;
-    const savedMessages = localStorage.getItem(STORAGE_MESSAGES_KEY);
-    if (!savedMessages) return undefined;
-    try {
-      const parsed = JSON.parse(savedMessages);
-      // Only keep last 10 messages
-      return parsed.slice(-MAX_STORED_MESSAGES);
-    } catch (e) {
-      console.error("Failed to parse saved messages:", e);
-      return undefined;
-    }
-  });
+  // Use Discord hook for logging
+  const { logToDiscord, isDiscordOffline } = useDiscord(chatId);
 
-  useEffect(() => {
-    // SSR safety: only access localStorage on client
-    if (typeof window === "undefined") return;
-
-    // Load saved thread ID (needs to be in useEffect since it's used in other effects)
-    const savedThreadId = localStorage.getItem(STORAGE_THREAD_KEY);
-    if (savedThreadId) {
-      // Initialize thread ID from localStorage on mount - this is intentional
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDiscordThreadId(savedThreadId);
-    }
-  }, []);
-
-  // Save thread ID to localStorage
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (discordThreadId) {
-      localStorage.setItem(STORAGE_THREAD_KEY, discordThreadId);
-    }
-  }, [discordThreadId]);
-
-  // Use default transport - simple and clean
-  const transport = useMemo(() => {
-    return new DefaultChatTransport({
-      api: "/api/chat",
-    });
-  }, []);
-
-  const {
-    messages,
-    sendMessage,
-    status,
-    error,
-    id: chatId,
-    setMessages,
-  } = useChat({
-    id: initialSessionId,
-    transport,
-  });
-
-  // Track previous error to detect changes
-  const prevErrorRef = useRef<Error | undefined>(error);
-
-  // Track connection status based on errors from useChat
-  // This is intentional - we're reacting to external error state changes
-  useEffect(() => {
-    const errorChanged = prevErrorRef.current !== error;
-    prevErrorRef.current = error;
-
-    if (error && errorChanged) {
-      // Error appeared - set offline
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsOffline(true);
-    } else if (!error && status === "ready" && isOffline) {
-      // No error and ready - auto-recover
-      setIsOffline(false);
-    }
-  }, [error, status, isOffline]);
-
-  // Restore messages after component mounts
-  useEffect(() => {
-    if (
-      initialMessages &&
-      initialMessages.length > 0 &&
-      messages.length === 0
-    ) {
-      // Cast to UIMessage[] since these are messages that came from useChat originally
-      setMessages(initialMessages as unknown as typeof messages);
-    }
-  }, [initialMessages, messages.length, setMessages]);
-
-  // Save chatId to localStorage when it changes
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (chatId) {
-      localStorage.setItem(STORAGE_KEY, chatId);
-    }
-  }, [chatId]);
-
-  // Save messages to localStorage (limit to last 10)
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (messages.length > 0) {
-      const limitedMessages = messages.slice(-MAX_STORED_MESSAGES);
-      localStorage.setItem(
-        STORAGE_MESSAGES_KEY,
-        JSON.stringify(limitedMessages),
-      );
-    }
-  }, [messages]);
+  // Track overall connection status (AI Gateway + Discord)
+  // Offline if either service fails (non-200 response)
+  const isOffline = !!error || isDiscordOffline;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -155,102 +47,6 @@ export function ChatWidget() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  // Get or create Discord thread (only called when needed for logging)
-  const getOrCreateDiscordThread = useCallback(
-    async (firstMessage?: string): Promise<string | null> => {
-      // If we already have a thread ID, use it
-      if (discordThreadId) {
-        return discordThreadId;
-      }
-
-      // Need chatId to create thread
-      if (!chatId) {
-        return null;
-      }
-
-      // Create a new thread
-      try {
-        const response = await fetch("/api/discord/thread", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            chatId,
-            firstMessage: firstMessage || "Chat session started",
-          }),
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Failed to create Discord thread:", errorText);
-          // Only set offline if it's a server error (5xx), not client errors (4xx)
-          if (response.status >= 500) {
-            setIsOffline(true);
-          }
-          return null;
-        }
-
-        const data = await response.json();
-        if (data.threadId) {
-          setDiscordThreadId(data.threadId);
-          return data.threadId;
-        }
-        return null;
-      } catch (error) {
-        console.error("Error creating Discord thread:", error);
-        // Network errors indicate offline
-        setIsOffline(true);
-        return null;
-      }
-    },
-    [discordThreadId, chatId],
-  );
-
-  // Log message to Discord (completely separate from AI chat)
-  const logToDiscord = useCallback(
-    async (content: string, role: "user" | "assistant") => {
-      // Get or create thread if needed
-      let threadId = discordThreadId;
-      if (!threadId && chatId) {
-        threadId = await getOrCreateDiscordThread(content);
-      }
-
-      if (!threadId) {
-        return; // Can't log without a thread
-      }
-
-      try {
-        const response = await fetch("/api/discord/message", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            threadId,
-            content,
-            role,
-          }),
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Failed to log message to Discord:", errorText);
-          // Only set offline if it's a server error (5xx), not client errors (4xx)
-          // Discord logging failures shouldn't break the chat experience
-          if (response.status >= 500) {
-            setIsOffline(true);
-          }
-        }
-      } catch (error) {
-        console.error("Error logging to Discord:", error);
-        // Network errors indicate offline
-        setIsOffline(true);
-      }
-    },
-    [discordThreadId, chatId, getOrCreateDiscordThread],
-  );
 
   // Helper to get text content from a message
   // UIMessage has a `parts` array with text parts
@@ -273,53 +69,40 @@ export function ChatWidget() {
     return "";
   };
 
-  // Track previous status to detect when streaming completes
+  // Log AI responses to Discord when streaming completes
+  // Track previous status to detect the transition from "streaming" to "ready"
   const prevStatusRef = useRef<string>(status);
 
-  // Log AI responses to Discord only when streaming just completed
   useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
-    const justFinishedStreaming =
-      prevStatusRef.current === "streaming" && status === "ready";
+    // Update ref on every status change
+    const wasStreaming = prevStatusRef.current === "streaming";
+    const isNowReady = status === "ready";
+    prevStatusRef.current = status;
 
-    if (
-      lastMessage &&
-      lastMessage.role === "assistant" &&
-      justFinishedStreaming // Only log when we just finished streaming (not on restore)
-    ) {
-      const messageText = getMessageText(lastMessage as ChatMessage);
-      if (messageText) {
-        // Log to Discord asynchronously - defer to avoid React warning about setState in effects
-        // This is fire-and-forget logging that may update state asynchronously in error handlers
-        setTimeout(() => {
+    // Only log when we just finished streaming (transition from streaming to ready)
+    if (wasStreaming && isNowReady) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage && lastMessage.role === "assistant") {
+        const messageText = getMessageText(lastMessage as ChatMessage);
+        if (messageText) {
           logToDiscord(messageText, "assistant").catch((err) => {
             console.error("Failed to log AI response to Discord:", err);
           });
-        }, 0);
+        }
       }
     }
-
-    prevStatusRef.current = status;
   }, [messages, status, logToDiscord]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || status !== "ready") return;
+    if (!input.trim() || status !== "ready" || isOffline) return;
 
     const messageText = input.trim();
 
-    // Try to send message - if it fails, error will be caught by useChat
-    try {
-      sendMessage({ text: messageText });
-      setInput("");
-      // Clear offline status on successful send attempt
-      if (isOffline) {
-        setIsOffline(false);
-      }
-    } catch (err) {
-      console.error("Failed to send message:", err);
-      setIsOffline(true);
-    }
+    // Clear input immediately for better UX
+    setInput("");
+
+    sendMessage({ text: messageText });
 
     // Log user message to Discord separately (non-blocking)
     logToDiscord(messageText, "user").catch((err) => {
@@ -359,7 +142,18 @@ export function ChatWidget() {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto bg-zinc-200 p-5 dark:bg-zinc-900/50">
-            {messages.length === 0 ? (
+            {isOffline ? (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center">
+                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-300 dark:bg-zinc-700">
+                    <Bot className="h-6 w-6 text-zinc-700 dark:text-zinc-400" />
+                  </div>
+                  <p className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                    Chat service offline, try again later.
+                  </p>
+                </div>
+              </div>
+            ) : messages.length === 0 ? (
               <div className="flex h-full items-center justify-center">
                 <div className="text-center">
                   <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-300 dark:bg-zinc-700">
@@ -411,40 +205,32 @@ export function ChatWidget() {
                     </div>
                   </div>
                 )}
-                {error && (
-                  <div className="flex justify-start">
-                    <div className="max-w-[80%] rounded-xl bg-red-50 px-4 py-2.5 text-red-800 ring-1 ring-red-200 dark:bg-red-900/20 dark:text-red-400 dark:ring-red-900/30">
-                      <p className="text-sm">Error: {error.message}</p>
-                    </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
               </div>
             )}
+            <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Form */}
+          {/* Input */}
           <form
             onSubmit={handleSubmit}
-            className="border-t-2 border-zinc-300 bg-zinc-300 p-3.5 dark:border-zinc-700 dark:bg-zinc-800"
+            className="flex gap-2 border-t border-zinc-300 bg-zinc-200 p-4 dark:border-zinc-700 dark:bg-zinc-800"
           >
-            <div className="flex gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Type your message..."
-                disabled={isLoading}
-                className="flex-1 rounded-lg border-2 border-zinc-400 bg-zinc-100 px-4 py-2 text-sm text-zinc-900 placeholder:text-zinc-500 focus:border-zinc-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-zinc-500/20 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-500 dark:focus:bg-zinc-800 dark:focus:ring-zinc-500/20 disabled:opacity-50"
-              />
-              <button
-                type="submit"
-                disabled={isLoading || !input.trim()}
-                className="flex cursor-pointer items-center justify-center rounded-lg bg-zinc-700 px-4 py-2 text-white shadow-sm transition-all hover:bg-zinc-600 hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-500/40 dark:bg-zinc-600 dark:hover:bg-zinc-500"
-                aria-label="Send message"
-              >
-                <Send className="h-4 w-4" />
-              </button>
-            </div>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
+              disabled={isLoading || isOffline}
+              className="flex-1 rounded-lg border-2 border-zinc-400 bg-zinc-100 px-4 py-2 text-sm text-zinc-900 placeholder:text-zinc-500 focus:border-zinc-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-zinc-500/20 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-500 dark:focus:bg-zinc-800 dark:focus:ring-zinc-500/20 disabled:opacity-50"
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !input.trim() || isOffline}
+              aria-label="Send message"
+              className="flex items-center justify-center rounded-lg bg-zinc-500 px-4 py-2 text-white transition-colors hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-600 dark:hover:bg-zinc-500"
+            >
+              <Send className="h-4 w-4" />
+            </button>
           </form>
         </div>
       </div>
