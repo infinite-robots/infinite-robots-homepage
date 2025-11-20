@@ -35,6 +35,7 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [discordThreadId, setDiscordThreadId] = useState<string | null>(null);
+  const [isOffline, setIsOffline] = useState(false);
 
   // Load session data from localStorage on mount
   const [initialSessionId, setInitialSessionId] = useState<string | undefined>(
@@ -103,6 +104,26 @@ export function ChatWidget() {
     transport,
   });
 
+  // Track previous error to detect changes
+  const prevErrorRef = useRef<Error | undefined>(error);
+
+  // Track connection status based on errors from useChat
+  // This is intentional - we're reacting to external error state changes
+  useEffect(() => {
+    const errorChanged = prevErrorRef.current !== error;
+    prevErrorRef.current = error;
+
+    if (error && errorChanged) {
+      // Error appeared - set offline
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsOffline(true);
+    } else if (!error && status === "ready" && isOffline) {
+      // No error and ready - auto-recover
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsOffline(false);
+    }
+  }, [error, status, isOffline]);
+
   // Restore messages after component mounts
   useEffect(() => {
     if (
@@ -170,7 +191,12 @@ export function ChatWidget() {
         });
 
         if (!response.ok) {
-          console.error("Failed to create Discord thread");
+          const errorText = await response.text();
+          console.error("Failed to create Discord thread:", errorText);
+          // Only set offline if it's a server error (5xx), not client errors (4xx)
+          if (response.status >= 500) {
+            setIsOffline(true);
+          }
           return null;
         }
 
@@ -182,6 +208,8 @@ export function ChatWidget() {
         return null;
       } catch (error) {
         console.error("Error creating Discord thread:", error);
+        // Network errors indicate offline
+        setIsOffline(true);
         return null;
       }
     },
@@ -215,10 +243,18 @@ export function ChatWidget() {
         });
 
         if (!response.ok) {
-          console.error("Failed to log message to Discord");
+          const errorText = await response.text();
+          console.error("Failed to log message to Discord:", errorText);
+          // Only set offline if it's a server error (5xx), not client errors (4xx)
+          // Discord logging failures shouldn't break the chat experience
+          if (response.status >= 500) {
+            setIsOffline(true);
+          }
         }
       } catch (error) {
         console.error("Error logging to Discord:", error);
+        // Network errors indicate offline
+        setIsOffline(true);
       }
     },
     [discordThreadId, chatId, getOrCreateDiscordThread],
@@ -278,9 +314,18 @@ export function ChatWidget() {
 
     const messageText = input.trim();
 
-    // Send message to AI (no Discord involvement)
-    sendMessage({ text: messageText });
-    setInput("");
+    // Try to send message - if it fails, error will be caught by useChat
+    try {
+      sendMessage({ text: messageText });
+      setInput("");
+      // Clear offline status on successful send attempt
+      if (isOffline) {
+        setIsOffline(false);
+      }
+    } catch (err) {
+      console.error("Failed to send message:", err);
+      setIsOffline(true);
+    }
 
     // Log user message to Discord separately (non-blocking)
     logToDiscord(messageText, "user").catch((err) => {
@@ -300,11 +345,20 @@ export function ChatWidget() {
           <div className="flex items-center justify-between border-b border-zinc-300 bg-zinc-300 px-4 py-1.5 dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center gap-2">
               <div className="relative flex h-2 w-2 items-center">
-                <span className="absolute h-2 w-2 animate-pulse rounded-full bg-green-500"></span>
-                <span className="absolute h-2 w-2 rounded-full bg-green-500 opacity-75"></span>
+                {isOffline ? (
+                  <>
+                    <span className="absolute h-2 w-2 rounded-full bg-red-500"></span>
+                    <span className="absolute h-2 w-2 rounded-full bg-red-500 opacity-75"></span>
+                  </>
+                ) : (
+                  <>
+                    <span className="absolute h-2 w-2 animate-pulse rounded-full bg-green-500"></span>
+                    <span className="absolute h-2 w-2 rounded-full bg-green-500 opacity-75"></span>
+                  </>
+                )}
               </div>
               <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                Online
+                {isOffline ? "Offline" : "Online"}
               </span>
             </div>
           </div>
