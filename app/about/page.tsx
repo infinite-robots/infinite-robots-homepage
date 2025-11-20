@@ -116,7 +116,7 @@ export default function AboutPage() {
               The Team
             </span>
             <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-              The People Behind Infinite Robots
+              The Humans of Infinite Robots
             </h2>
             <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
               We&rsquo;re a small, focused team. We value thoughtful

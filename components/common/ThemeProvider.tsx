@@ -61,16 +61,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const initialSystemTheme: Theme = mediaQuery.matches ? "dark" : "light";
     const initialTheme = storedTheme ?? initialSystemTheme;
 
+    // Initialize state synchronously on mount - this is intentional
     if (storedTheme) {
       userPreferenceRef.current = storedTheme;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUserPreference(storedTheme);
     } else {
       setUserPreference("system");
     }
 
     setSystemTheme(initialSystemTheme);
+
     setTheme(initialTheme);
     applyThemeClass(initialTheme);
+
     setIsReady(true);
 
     const handleChange = (event: MediaQueryListEvent) => {
@@ -111,7 +115,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setTheme(preference);
       applyThemeClass(preference);
     },
-    [systemTheme]
+    [systemTheme],
   );
 
   const toggleTheme = useCallback(() => {
@@ -134,7 +138,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       theme,
       toggleTheme,
       userPreference,
-    ]
+    ],
   );
 
   return (

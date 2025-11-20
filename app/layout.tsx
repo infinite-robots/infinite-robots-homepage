@@ -1,5 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ChatWidget } from "@/components/chat/ChatWidget";
+import { ChatProvider } from "@/components/chat/ChatContext";
 import { ResponsiveHeader } from "@/components/common/ResponsiveHeader";
 import { SiteFooter } from "@/components/common/SiteFooter";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
@@ -55,13 +57,16 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
         <ThemeProvider>
-          <div className="flex min-h-screen flex-col">
-            <ResponsiveHeader />
-            <div className="flex-1">{children}</div>
-            <Analytics />
-            <SpeedInsights />
-            <SiteFooter />
-          </div>
+          <ChatProvider>
+            <div className="flex min-h-screen flex-col">
+              <ResponsiveHeader />
+              <div className="flex-1">{children}</div>
+              <Analytics />
+              <SpeedInsights />
+              <SiteFooter />
+              <ChatWidget />
+            </div>
+          </ChatProvider>
         </ThemeProvider>
       </body>
     </html>
