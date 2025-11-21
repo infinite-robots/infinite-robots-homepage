@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { useTheme } from "./ThemeProvider";
+import { useChatContext } from "@/components/chat/ChatContext";
 
 const footerLinks = [
   { label: "Home", href: "/" },
@@ -86,26 +87,29 @@ function ThemeToggle() {
 }
 
 export function SiteFooter() {
+  const { openChat } = useChatContext();
+
   return (
     <footer className="bg-brand-dark pt-8 pb-16 text-zinc-300 transition-colors duration-300">
       <div className="container mx-auto flex flex-col items-center gap-10 px-6">
-        <Link
-          href="/"
-          className="flex items-center gap-3 text-lg font-semibold tracking-tight text-white transition hover:opacity-90 dark:text-zinc-100"
+        <button
+          onClick={openChat}
+          className="flex items-center gap-3 text-lg font-semibold tracking-tight text-white transition hover:opacity-90 dark:text-zinc-100 cursor-pointer"
+          aria-label="Open chat"
         >
           <span className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-full bg-white/10">
             <Image
               src="/irlogo.jpg"
-              alt="Infinite Robots logo"
+              alt="Infinite Robots logo - click to chat"
               fill
               sizes="256px"
               className="object-cover"
               priority
             />
           </span>
-        </Link>
+        </button>
 
-        <nav className="flex flex-wrap justify-center gap-x-10 gap-y-4 text-sm font-medium text-zinc-200 dark:text-zinc-300">
+        <nav className="flex flex-wrap justify-center gap-x-5 gap-y-4 text-sm font-medium text-zinc-200 sm:gap-x-10 dark:text-zinc-300">
           {footerLinks.map((link) => (
             <Link
               key={link.label}

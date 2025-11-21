@@ -9,8 +9,8 @@ const services = [
     id: "website-development",
     title: "Website Development",
     description: [
-      "We design and build websites that clearly communicate who you are, what you do, and why customers should choose you.",
-      "Fast load times, clean navigation, and a structure designed for conversion &mdash; not confusion.",
+      "We build websites that highlight what makes you the right choice and turn visitors into qualified leads and customers.",
+      "Fast load times, intuitive navigation, and a structure built for conversion.",
     ],
     lists: [
       {
@@ -36,7 +36,7 @@ const services = [
     id: "app-development",
     title: "App Development",
     description: [
-      "Mobile apps built for real everyday use &mdash; stable, intuitive, and maintainable over time.",
+      "Mobile apps built for real everyday use - stable, intuitive, and maintainable over time.",
       "Native or cross-platform depending on needs and budget.",
     ],
     lists: [
@@ -64,7 +64,7 @@ const services = [
     title: "Agentic Development",
     description: [
       "We create AI-powered digital helpers that plug into your existing tools (email, CRM, scheduling, operations platforms) and handle repetitive tasks end-to-end.",
-      "They surface only what requires human attention &mdash; reducing noise and freeing up time.",
+      "They surface only what requires human attention - reducing noise and freeing up time.",
     ],
     lists: [
       {
@@ -90,7 +90,7 @@ const services = [
     id: "social-media-management",
     title: "Social Media Management",
     description: [
-      "Consistent, professional presence &mdash; handled for you.",
+      "Consistent, professional presence - handled for you.",
       "We create a repeatable content system tailored to your voice and customer base.",
     ],
     lists: [
@@ -117,7 +117,7 @@ const services = [
     id: "ads-management",
     title: "Ads Management",
     description: [
-      "We build and optimize ad campaigns focused on measurable business outcomes &mdash; not vanity metrics.",
+      "We build and optimize ad campaigns focused on measurable business outcomes, not vanity metrics.",
       "Clear reporting. ROI-first decisions.",
     ],
     lists: [
@@ -181,9 +181,8 @@ export default function ServicesPage() {
         title="Services"
         description={
           <>
-            We help businesses communicate clearly, operate efficiently, and
-            grow consistently &mdash; through thoughtful design and dependable
-            systems.
+            Bring AI into your business the right way — with real engineers
+            behind it.
           </>
         }
       />

@@ -2,7 +2,7 @@ const ITEMS = [
   "Built for Performance",
   "Designed for Growth",
   "Clear Communication",
-  "Reliable Support",
+  "Dependable Support",
 ];
 
 export function ValueStripe() {

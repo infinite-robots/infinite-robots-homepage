@@ -18,6 +18,8 @@ export function ServicesNavigation({ items }: { items: ServicesNavItem[] }) {
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
     if (hash && itemIds.includes(hash)) {
+      // Initialize activeId from URL hash on mount - this is intentional
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveId(hash);
     }
   }, [itemIds]);
@@ -52,7 +54,7 @@ export function ServicesNavigation({ items }: { items: ServicesNavItem[] }) {
     const updateActiveId = () => {
       const nextId = findActiveId();
       setActiveId((previousId) =>
-        previousId === nextId ? previousId : nextId
+        previousId === nextId ? previousId : nextId,
       );
     };
 
@@ -66,6 +68,8 @@ export function ServicesNavigation({ items }: { items: ServicesNavItem[] }) {
       }
     };
 
+    // Initialize activeId on mount - this is intentional
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     updateActiveId();
 
     window.addEventListener("scroll", handleScroll, { passive: true });

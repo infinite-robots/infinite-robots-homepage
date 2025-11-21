@@ -6,7 +6,7 @@ export function FinalCallToAction() {
           Let&rsquo;s build the digital systems that support your growth.
         </h2>
         <a
-          href="mailto:hello@infiniterobots.com"
+          href="/contact"
           className="rounded-full bg-brand px-10 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-strong"
         >
           Schedule a Consultation

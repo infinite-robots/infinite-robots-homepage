@@ -9,7 +9,7 @@ const config = {
         brand: {
           DEFAULT: "#006cdd",
           dark: "#0e131b",
-          accent: "#507883",
+          accent: "#0ca8d3",
           strong: "#005bb7",
           surface: "#111827",
         },

@@ -19,7 +19,10 @@ nvm use
 Create a `.env.local` file in the root directory with the following:
 
 ```bash
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+DISCORD_WEBHOOK_URL=your_url
+DISCORD_BOT_TOKEN=your_discord_bot_token
+DISCORD_CHANNEL_ID=your_channel_id
+AI_GATEWAY_API_KEY=your_vercel_ai_gateway_api_key
 ```
 
 ## Running the Development Server
