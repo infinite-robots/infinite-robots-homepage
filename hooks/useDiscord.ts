@@ -1,15 +1,41 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
+
+const DISCORD_THREAD_ID_KEY = "ir-discord-thread-id";
 
 /**
  * Hook for Discord logging functionality
  * Handles thread creation and message logging to Discord
  * Tracks offline state based on non-200 responses
+ * Persists discordThreadId in localStorage
  */
 export function useDiscord(chatId: string | undefined) {
   const [discordThreadId, setDiscordThreadId] = useState<string | null>(null);
   const [isDiscordOffline, setIsDiscordOffline] = useState(false);
+
+  // Load discordThreadId from localStorage on mount
+  // This is intentional - we're loading initial state from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(DISCORD_THREAD_ID_KEY);
+      if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setDiscordThreadId(stored);
+      }
+    }
+  }, []);
+
+  // Save discordThreadId to localStorage when it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (discordThreadId) {
+        localStorage.setItem(DISCORD_THREAD_ID_KEY, discordThreadId);
+      } else {
+        localStorage.removeItem(DISCORD_THREAD_ID_KEY);
+      }
+    }
+  }, [discordThreadId]);
 
   // Get or create Discord thread (only called when needed for logging)
   const getOrCreateDiscordThread = useCallback(

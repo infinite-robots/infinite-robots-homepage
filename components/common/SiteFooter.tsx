@@ -109,7 +109,7 @@ export function SiteFooter() {
           </span>
         </button>
 
-        <nav className="flex flex-wrap justify-center gap-x-10 gap-y-4 text-sm font-medium text-zinc-200 dark:text-zinc-300">
+        <nav className="flex flex-wrap justify-center gap-x-5 gap-y-4 text-sm font-medium text-zinc-200 sm:gap-x-10 dark:text-zinc-300">
           {footerLinks.map((link) => (
             <Link
               key={link.label}

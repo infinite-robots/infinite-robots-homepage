@@ -12,20 +12,9 @@ export default function ContactPage() {
 
       <section>
         <div className="container mx-auto px-6 py-12 md:py-16">
-
           <ContactForm />
 
           <div className="mt-10 mx-auto max-w-3xl space-y-3 text-center text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            <p>
-              Or just send us an email directly at{" "}
-              <a
-                href="mailto:hello@infinite-robots.com"
-                className="font-medium text-brand transition-colors hover:text-brand-strong"
-              >
-                hello@infinite-robots.com
-              </a>
-            </p>
-
             <p className="mx-auto max-w-3xl text-center text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
               We respond to all inquiries within one business day.
             </p>

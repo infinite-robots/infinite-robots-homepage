@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ProfileCard } from "@/components/about/ProfileCard";
 import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 
@@ -10,6 +11,70 @@ export default function AboutPage() {
         title="About Us"
         description="We design and build digital systems that help businesses run smoothly, look credible, and grow at a sustainable pace, without adding operational complexity."
       />
+
+      <section className="border-b border-zinc-100 py-16 dark:border-zinc-800 md:py-20">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-4">
+              <span className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                The Team
+              </span>
+              <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+                The Humans of Infinite Robots
+              </h2>
+              <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
+                We&rsquo;re a small, focused team. We value thoughtful
+                engineering, steady collaboration, and systems that feel good to
+                use.
+              </p>
+            </div>
+            <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+              <ProfileCard
+                name="Andrew"
+                title="Founder / Product &amp; UI/UX"
+                bio="Andrew is the founder and product lead, responsible for
+                  setting the vision and ensuring everything we build is
+                  thoughtful, polished, and effective. He brings over 10 years
+                  of full-stack experience across startups and enterprise
+                  systems. His strength is turning big ideas into software that
+                  actually delivers."
+                imageUrl="/drew.jpg"
+              />
+              <ProfileCard
+                name="Ralph"
+                title="Distributed Systems &amp; Backend Engineering"
+                bio="Ralph is our resident systems wizard — the kind of engineer
+                  who can summon scalable architecture from thin air and tame
+                  even the most unruly distributed systems. He's led teams,
+                  built platforms, and guided products from vague idea to
+                  production reality. Around here, we just say: if it's
+                  complicated, give it to Ralph."
+                imageUrl="/ralph.jpg"
+              />
+              <ProfileCard
+                name="Brad"
+                title="Brand &amp; Marketing Strategy"
+                bio="Brad brings a deep understanding of both the technical and
+                  creative sides of digital presence. He's been building on the web
+                  long enough to see it evolve from simple pages to complex
+                  platforms, and he knows how to make businesses look and feel
+                  as polished on the outside as they are solid underneath."
+                imageUrl="/brad.jpg"
+              />
+              <ProfileCard
+                name="Will"
+                title="Creative Design &amp; Visual Art"
+                bio="Will brings the kind of creative vision and artistic sensibility
+                  that makes everything we build not just functional, but genuinely
+                  beautiful. He's the steady hand that keeps projects moving, the
+                  creative problem-solver who makes the impossible feel
+                  straightforward, and frankly, just the coolest person on the team."
+                imageUrl="/will.jpg"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-6">
@@ -60,8 +125,8 @@ export default function AboutPage() {
                 business runs day-to-day. From there, we design and build
                 systems that are straightforward to use, dependable over time,
                 and flexible enough to evolve as your needs change. Our work
-                doesn’t end at launch — we stay available to support, refine,
-                and improve as your business grows.
+                doesn&rsquo;t end at launch — we stay available to support,
+                refine, and improve as your business grows.
               </p>
               <div className="space-y-5 text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
                 <div>
@@ -104,88 +169,6 @@ export default function AboutPage() {
                 <p>We&rsquo;re not chasing trends or buzzwords.</p>
                 <p>We care about solving real problems in ways that last.</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-y border-zinc-100 py-16 dark:border-zinc-800 md:py-20">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col gap-6">
-            <span className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-              The Team
-            </span>
-            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-              The Humans of Infinite Robots
-            </h2>
-            <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
-              We&rsquo;re a small, focused team. We value thoughtful
-              engineering, steady collaboration, and systems that feel good to
-              use.
-            </p>
-            <div className="grid gap-16 md:grid-cols-2">
-              <article className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-zinc-200 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
-                  Photo
-                </div>
-                <h3 className="text-xl font-semibold tracking-tight">Andrew</h3>
-                <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Founder / Product &amp; UI/UX
-                </p>
-                <p className="text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
-                  Andrew is the founder and product lead, responsible for
-                  setting the vision and ensuring everything we build is
-                  thoughtful, polished, and effective. He brings over 10 years
-                  of full-stack experience across startups and enterprise
-                  systems. His strength is turning big ideas into software that
-                  actually delivers.
-                </p>
-              </article>
-              <article className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-zinc-200 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
-                  Photo
-                </div>
-                <h3 className="text-xl font-semibold tracking-tight">Ralph</h3>
-                <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Distributed Systems &amp; Backend Engineering
-                </p>
-                <p className="text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
-                  Ralph is our resident systems wizard — the kind of engineer
-                  who can summon scalable architecture from thin air and tame
-                  even the most unruly distributed systems. He’s led teams,
-                  built platforms, and guided products from vague idea to
-                  production reality. Around here, we just say: if it’s
-                  complicated, give it to Ralph.
-                </p>
-              </article>
-              <article className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-zinc-200 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
-                  Photo
-                </div>
-                <h3 className="text-xl font-semibold tracking-tight">Brad</h3>
-                <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Brand &amp; Marketing Strategy
-                </p>
-                <p className="text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
-                  Brad has been making websites since the dawn of time, back
-                  when you could only Ask Jeeves for help. He has now helped
-                  over a trillion businesses look and feel as beautiful on the
-                  outside as they do on the inside with his full stack
-                  engineering skills to pay the bills.
-                </p>
-              </article>
-              <article className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-zinc-200 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
-                  Photo
-                </div>
-                <h3 className="text-xl font-semibold tracking-tight">Will</h3>
-                <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  All-around Badass and Jack of All Trades
-                </p>
-                <p className="text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
-                  Bio coming soon...
-                </p>
-              </article>
             </div>
           </div>
         </div>

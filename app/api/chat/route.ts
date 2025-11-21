@@ -20,6 +20,7 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
 
     // Convert UIMessages to ModelMessages for streamText
+    // Previous messages are now included in the messages array (prepended on first message)
     const modelMessages = convertToModelMessages(messages);
 
     // Stream AI response (no Discord involvement - that's handled client-side)

@@ -103,31 +103,6 @@ export function ContactForm() {
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="referral-source"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-200"
-        >
-          How did you hear about us?{" "}
-          <span className="font-normal text-zinc-500">(optional)</span>
-        </label>
-        <select
-          id="referral-source"
-          name="referralSource"
-          className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100"
-          defaultValue=""
-        >
-          <option value="" disabled>
-            Select an option
-          </option>
-          <option value="referral">Referral</option>
-          <option value="social">Social media</option>
-          <option value="search">Search engine</option>
-          <option value="event">Event or meetup</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-
       {status.type === "success" && (
         <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
           {status.message}

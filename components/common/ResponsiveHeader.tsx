@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import { useChatContext } from "@/components/chat/ChatContext";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Home", showDesktop: false },
+  { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/testimonials", label: "Testimonials" },
   { href: "/about", label: "About" },
@@ -61,13 +61,17 @@ export function ResponsiveHeader() {
               </span>
             )}
           </button>
-          <Link
-            href="/"
-            className="text-lg font-bold tracking-tight text-white transition-colors hover:text-zinc-200"
-            onClick={() => setMobileOpen(false)}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              toggleChat();
+              setMobileOpen(false);
+            }}
+            className="text-lg font-bold tracking-tight text-white transition-colors hover:text-zinc-200 cursor-pointer"
+            aria-label="Toggle chat"
           >
             Infinite Robots
-          </Link>
+          </button>
           {/* Close chat button - only show when chat is open */}
           {isOpen && (
             <button
@@ -85,24 +89,22 @@ export function ResponsiveHeader() {
         </div>
 
         <nav className="hidden items-center gap-8 py-4 text-sm font-medium text-zinc-200 md:flex">
-          {NAV_ITEMS.filter((item) => item.showDesktop !== false).map(
-            (item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`font-bold text-base transition-colors ${
-                  pathname === item.href
-                    ? "text-white"
-                    : "text-zinc-200 hover:text-zinc-100"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`font-bold text-base transition-colors ${
+                pathname === item.href
+                  ? "text-white"
+                  : "text-zinc-200 hover:text-zinc-100"
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
           <Link
             href="/contact"
-            className="rounded-full bg-brand px-5 py-2 text-base font-bold text-white transition-colors hover:bg-brand-strong"
+            className="hidden rounded-full bg-brand px-5 py-2 text-base font-bold text-white transition-colors hover:bg-brand-strong lg:block"
           >
             Get Started
           </Link>
