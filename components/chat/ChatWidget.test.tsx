@@ -567,17 +567,13 @@ describe("ChatWidget", () => {
       return null;
     });
 
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    // Component should handle error gracefully without crashing
+    expect(() => {
+      render(<ChatWidget />);
+    }).not.toThrow();
 
-    render(<ChatWidget />);
-
-    // Should handle error gracefully
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Failed to load previous messages:",
-      expect.any(Error),
-    );
-
-    consoleSpy.mockRestore();
+    // Should still render the placeholder since messages couldn't be loaded
+    expect(screen.getByText("Hi! How can we help?")).toBeInTheDocument();
   });
 
   it("should limit stored messages to last 10 when streaming completes", async () => {
