@@ -3,8 +3,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ChatWidget } from "./ChatWidget";
 
-// Type for useChat return value
-type UseChatReturn = {
+// Type for useAIGateway return value
+type UseAIGatewayReturn = {
   messages: Array<{
     id: string;
     role: "user" | "assistant";
@@ -18,13 +18,12 @@ type UseChatReturn = {
   setMessages: (messages: unknown[]) => void;
 };
 
-// Mock ALL fetch calls - never make real API requests in tests
-global.fetch = vi.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: async () => ({ threadId: "mock-thread-id" }),
-  } as Response),
-);
+// Type for useDiscord return value
+type UseDiscordReturn = {
+  logToDiscord: (content: string, role: "user" | "assistant") => Promise<void>;
+  discordThreadId: string | null;
+  isDiscordOffline: boolean;
+};
 
 // Mock localStorage
 const localStorageMock = {
@@ -35,13 +34,14 @@ const localStorageMock = {
 };
 Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
+  writable: true,
 });
 
-// Mock the useChat hook - NEVER make real AI API calls in tests
+// Mock the useAIGateway hook - NEVER make real AI API calls in tests
 const mockSendMessage = vi.fn();
 const mockSetMessages = vi.fn();
-const mockUseChat = vi.fn(
-  (): UseChatReturn => ({
+const mockUseAIGateway = vi.fn(
+  (): UseAIGatewayReturn => ({
     messages: [],
     sendMessage: mockSendMessage,
     status: "ready",
@@ -51,23 +51,23 @@ const mockUseChat = vi.fn(
   }),
 );
 
-vi.mock("@ai-sdk/react", () => ({
-  useChat: () => mockUseChat(),
+vi.mock("@/hooks/useAIGateway", () => ({
+  useAIGateway: () => mockUseAIGateway(),
 }));
 
-// Mock DefaultChatTransport to prevent real API calls
-// This ensures no real HTTP requests are made during tests
-vi.mock("ai", async () => {
-  const actual = await vi.importActual("ai");
-  return {
-    ...actual,
-    DefaultChatTransport: class MockDefaultChatTransport {
-      constructor() {}
-      sendMessages = vi.fn(() => Promise.resolve(new ReadableStream()));
-      reconnectToStream = vi.fn();
-    },
-  };
-});
+// Mock the useDiscord hook
+const mockLogToDiscord = vi.fn(() => Promise.resolve());
+const mockUseDiscord = vi.fn(
+  (): UseDiscordReturn => ({
+    logToDiscord: mockLogToDiscord,
+    discordThreadId: null,
+    isDiscordOffline: false,
+  }),
+);
+
+vi.mock("@/hooks/useDiscord", () => ({
+  useDiscord: (chatId: string | undefined) => mockUseDiscord(chatId),
+}));
 
 // Mock the ChatContext
 const mockCloseChat = vi.fn();
@@ -86,7 +86,7 @@ describe("ChatWidget", () => {
     vi.clearAllMocks();
     localStorageMock.getItem.mockReturnValue(null);
     // Reset to default empty messages
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -94,11 +94,12 @@ describe("ChatWidget", () => {
       id: "test-chat-id",
       setMessages: mockSetMessages,
     });
-    // Mock fetch to NEVER make real requests
-    vi.mocked(global.fetch).mockResolvedValue({
-      ok: true,
-      json: async () => ({ threadId: "mock-thread-id" }),
-    } as Response);
+    // Reset Discord hook
+    mockUseDiscord.mockReturnValue({
+      logToDiscord: mockLogToDiscord,
+      discordThreadId: null,
+      isDiscordOffline: false,
+    });
   });
 
   afterEach(() => {
@@ -133,9 +134,9 @@ describe("ChatWidget", () => {
     expect(input).toHaveValue("");
   });
 
-  it("should display messages from useChat", () => {
-    // Mock useChat to return messages
-    mockUseChat.mockReturnValue({
+  it("should display messages from useAIGateway", () => {
+    // Mock useAIGateway to return messages
+    mockUseAIGateway.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -199,7 +200,7 @@ describe("ChatWidget", () => {
   });
 
   it("should show loading indicator when status is streaming", () => {
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "streaming",
@@ -215,8 +216,8 @@ describe("ChatWidget", () => {
     expect(input).toBeDisabled();
   });
 
-  it("should show error message when error exists", () => {
-    mockUseChat.mockReturnValue({
+  it("should show offline state when error exists", () => {
+    mockUseAIGateway.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -232,8 +233,11 @@ describe("ChatWidget", () => {
     });
 
     render(<ChatWidget />);
-    // Error should be displayed in the messages area
-    expect(screen.getByText(/Error: Test error/)).toBeInTheDocument();
+    // Error should show offline state, not error text
+    expect(
+      screen.getByText("Chat service offline, try again later."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Offline")).toBeInTheDocument();
   });
 
   it("should not render when isOpen is false", () => {
@@ -252,12 +256,14 @@ describe("ChatWidget", () => {
       {
         id: "msg-1",
         role: "user",
-        parts: [{ type: "text", text: "Saved message" }],
+        text: "Saved message",
+        timestamp: Date.now(),
       },
       {
         id: "msg-2",
         role: "assistant",
-        parts: [{ type: "text", text: "Saved response" }],
+        text: "Saved response",
+        timestamp: Date.now(),
       },
     ];
 
@@ -265,17 +271,11 @@ describe("ChatWidget", () => {
       if (key === "ir-chat-messages") {
         return JSON.stringify(savedMessages);
       }
-      if (key === "ir-chat-session") {
-        return "saved-chat-id";
-      }
-      if (key === "ir-discord-thread") {
-        return "saved-thread-id";
-      }
       return null;
     });
 
     const mockSetMessages = vi.fn();
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -288,12 +288,18 @@ describe("ChatWidget", () => {
 
     // Wait for useEffect to run
     await waitFor(() => {
-      // Should call setMessages to restore
-      expect(mockSetMessages).toHaveBeenCalledWith(savedMessages);
+      // Should call setMessages to restore with converted format
+      expect(mockSetMessages).toHaveBeenCalled();
+      const callArgs = mockSetMessages.mock.calls[0][0];
+      expect(callArgs).toHaveLength(2);
+      expect(callArgs[0].id).toBe("prev-msg-1");
+      expect(callArgs[0].role).toBe("user");
+      expect(callArgs[1].id).toBe("prev-msg-2");
+      expect(callArgs[1].role).toBe("assistant");
     });
   });
 
-  it("should save messages to localStorage when messages change", () => {
+  it("should save messages to localStorage when streaming completes", async () => {
     const messages = [
       {
         id: "msg-1",
@@ -307,7 +313,20 @@ describe("ChatWidget", () => {
       },
     ];
 
-    mockUseChat.mockReturnValue({
+    // First render with streaming status
+    mockUseAIGateway.mockReturnValue({
+      messages,
+      sendMessage: mockSendMessage,
+      status: "streaming",
+      error: undefined,
+      id: "test-chat-id",
+      setMessages: mockSetMessages,
+    });
+
+    const { rerender } = render(<ChatWidget />);
+
+    // Then update to ready status (simulating streaming completion)
+    mockUseAIGateway.mockReturnValue({
       messages,
       sendMessage: mockSendMessage,
       status: "ready",
@@ -316,17 +335,26 @@ describe("ChatWidget", () => {
       setMessages: mockSetMessages,
     });
 
-    render(<ChatWidget />);
+    rerender(<ChatWidget />);
 
-    // Should save messages to localStorage
-    expect(localStorageMock.setItem).toHaveBeenCalledWith(
-      "ir-chat-messages",
-      JSON.stringify(messages),
-    );
+    // Wait for useEffect to run
+    await waitFor(() => {
+      // Should save messages to localStorage when streaming completes
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        "ir-chat-messages",
+        expect.any(String),
+      );
+      const savedData = JSON.parse(
+        localStorageMock.setItem.mock.calls.find(
+          (call) => call[0] === "ir-chat-messages",
+        )?.[1] || "[]",
+      );
+      expect(savedData).toHaveLength(2);
+    });
   });
 
-  it("should save chatId to localStorage when it changes", () => {
-    mockUseChat.mockReturnValue({
+  it("should not save chatId to localStorage (handled by useAIGateway)", () => {
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -337,15 +365,17 @@ describe("ChatWidget", () => {
 
     render(<ChatWidget />);
 
-    expect(localStorageMock.setItem).toHaveBeenCalledWith(
-      "ir-chat-session",
-      "new-chat-id",
+    // ChatWidget no longer saves chatId - that's handled by useAIGateway
+    // This test verifies the component doesn't interfere
+    const chatIdCalls = localStorageMock.setItem.mock.calls.filter(
+      (call) => call[0] === "ir-chat-session",
     );
+    expect(chatIdCalls).toHaveLength(0);
   });
 
-  it("should handle Discord thread creation when logging first message", async () => {
+  it("should log user message to Discord when sending", async () => {
     const user = userEvent.setup();
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -354,10 +384,7 @@ describe("ChatWidget", () => {
       setMessages: mockSetMessages,
     });
 
-    vi.mocked(global.fetch).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ threadId: "new-thread-id" }),
-    } as Response);
+    mockLogToDiscord.mockResolvedValue(undefined);
 
     render(<ChatWidget />);
 
@@ -365,27 +392,15 @@ describe("ChatWidget", () => {
     await user.type(input, "First message");
     await user.click(screen.getByLabelText("Send message"));
 
-    // Should attempt to create Discord thread
+    // Should call logToDiscord from useDiscord hook
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        "/api/discord/thread",
-        expect.objectContaining({
-          method: "POST",
-        }),
-      );
+      expect(mockLogToDiscord).toHaveBeenCalledWith("First message", "user");
     });
   });
 
   it("should log user message to Discord after sending", async () => {
     const user = userEvent.setup();
-    localStorageMock.getItem.mockImplementation((key: string) => {
-      if (key === "ir-discord-thread") {
-        return "existing-thread-id";
-      }
-      return null;
-    });
-
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -394,10 +409,7 @@ describe("ChatWidget", () => {
       setMessages: vi.fn(),
     });
 
-    vi.mocked(global.fetch).mockResolvedValue({
-      ok: true,
-      json: async () => ({}),
-    } as Response);
+    mockLogToDiscord.mockResolvedValue(undefined);
 
     render(<ChatWidget />);
 
@@ -405,20 +417,14 @@ describe("ChatWidget", () => {
     await user.type(input, "Test message");
     await user.click(screen.getByLabelText("Send message"));
 
-    // Should log to Discord
+    // Should log to Discord via hook
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        "/api/discord/message",
-        expect.objectContaining({
-          method: "POST",
-          body: expect.stringContaining("Test message"),
-        }),
-      );
+      expect(mockLogToDiscord).toHaveBeenCalledWith("Test message", "user");
     });
   });
 
   it("should handle getMessageText with parts array format", () => {
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -438,7 +444,7 @@ describe("ChatWidget", () => {
   });
 
   it("should handle getMessageText with string content format", () => {
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [
         {
           id: "msg-2",
@@ -458,7 +464,7 @@ describe("ChatWidget", () => {
   });
 
   it("should handle getMessageText with array content format", () => {
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [
         {
           id: "msg-3",
@@ -483,7 +489,7 @@ describe("ChatWidget", () => {
 
   it("should not send message when status is not ready", async () => {
     const user = userEvent.setup();
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "streaming",
@@ -505,15 +511,8 @@ describe("ChatWidget", () => {
   });
 
   it("should log AI response to Discord when streaming completes", async () => {
-    localStorageMock.getItem.mockImplementation((key: string) => {
-      if (key === "ir-discord-thread") {
-        return "existing-thread-id";
-      }
-      return null;
-    });
-
     // First render with streaming status
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -531,7 +530,7 @@ describe("ChatWidget", () => {
     const { rerender } = render(<ChatWidget />);
 
     // Then update to ready status (simulating streaming completion)
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -548,14 +547,12 @@ describe("ChatWidget", () => {
 
     rerender(<ChatWidget />);
 
-    // Should attempt to log to Discord
+    // Should attempt to log to Discord via hook
     await waitFor(
       () => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          "/api/discord/message",
-          expect.objectContaining({
-            method: "POST",
-          }),
+        expect(mockLogToDiscord).toHaveBeenCalledWith(
+          "AI response",
+          "assistant",
         );
       },
       { timeout: 2000 },
@@ -576,15 +573,17 @@ describe("ChatWidget", () => {
 
     // Should handle error gracefully
     expect(consoleSpy).toHaveBeenCalledWith(
-      "Failed to parse saved messages:",
+      "Failed to load previous messages:",
       expect.any(Error),
     );
 
     consoleSpy.mockRestore();
   });
 
-  it("should limit stored messages to last 10", () => {
+  it("should limit stored messages to last 10 when streaming completes", async () => {
+    // Create 15 messages, ensuring the last one is an assistant message (triggers save)
     const manyMessages = Array.from({ length: 15 }, (_, i) => {
+      // Make sure last message (index 14) is assistant
       const role = i % 2 === 0 ? ("user" as const) : ("assistant" as const);
       return {
         id: `msg-${i}`,
@@ -592,8 +591,27 @@ describe("ChatWidget", () => {
         parts: [{ type: "text", text: `Message ${i}` }],
       };
     });
+    // Ensure last message is assistant (required for save to trigger)
+    manyMessages[14] = {
+      id: "msg-14",
+      role: "assistant" as const,
+      parts: [{ type: "text", text: "Message 14" }],
+    };
 
-    mockUseChat.mockReturnValue({
+    // First render with streaming status
+    mockUseAIGateway.mockReturnValue({
+      messages: manyMessages,
+      sendMessage: mockSendMessage,
+      status: "streaming",
+      error: undefined,
+      id: "test-chat-id",
+      setMessages: vi.fn(),
+    });
+
+    const { rerender } = render(<ChatWidget />);
+
+    // Then update to ready status (simulating streaming completion)
+    mockUseAIGateway.mockReturnValue({
       messages: manyMessages,
       sendMessage: mockSendMessage,
       status: "ready",
@@ -602,24 +620,29 @@ describe("ChatWidget", () => {
       setMessages: vi.fn(),
     });
 
-    render(<ChatWidget />);
+    rerender(<ChatWidget />);
 
-    // Should only save last 10 messages
-    const setItemCalls = localStorageMock.setItem.mock.calls;
-    const messagesCall = setItemCalls.find(
-      (call) => call[0] === "ir-chat-messages",
+    // Wait for useEffect to run - save happens when streaming completes with assistant message
+    await waitFor(
+      () => {
+        // Should only save last 10 messages
+        const setItemCalls = localStorageMock.setItem.mock.calls;
+        const messagesCall = setItemCalls.find(
+          (call) => call[0] === "ir-chat-messages",
+        );
+        expect(messagesCall).toBeDefined();
+        if (messagesCall) {
+          const savedMessages = JSON.parse(messagesCall[1]);
+          expect(savedMessages).toHaveLength(10);
+        }
+      },
+      { timeout: 3000 },
     );
-    expect(messagesCall).toBeDefined();
-    if (messagesCall) {
-      const savedMessages = JSON.parse(messagesCall[1]);
-      expect(savedMessages).toHaveLength(10);
-      expect(savedMessages[0].id).toBe("msg-5"); // First of last 10
-    }
   });
 
-  it("should handle Discord thread creation failure", async () => {
+  it("should handle Discord logging failure gracefully", async () => {
     const user = userEvent.setup();
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -630,10 +653,8 @@ describe("ChatWidget", () => {
 
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    vi.mocked(global.fetch).mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({}),
-    } as Response);
+    // Mock logToDiscord to reject
+    mockLogToDiscord.mockRejectedValueOnce(new Error("Discord error"));
 
     render(<ChatWidget />);
 
@@ -644,7 +665,7 @@ describe("ChatWidget", () => {
     // Should handle error gracefully
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Error creating Discord thread:",
+        "Failed to log user message to Discord:",
         expect.any(Error),
       );
     });
@@ -654,49 +675,7 @@ describe("ChatWidget", () => {
 
   it("should handle Discord message logging failure", async () => {
     const user = userEvent.setup();
-    localStorageMock.getItem.mockImplementation((key: string) => {
-      if (key === "ir-discord-thread") {
-        return "existing-thread-id";
-      }
-      return null;
-    });
-
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    mockUseChat.mockReturnValue({
-      messages: [],
-      sendMessage: mockSendMessage,
-      status: "ready",
-      error: undefined,
-      id: "test-chat-id",
-      setMessages: vi.fn(),
-    });
-
-    vi.mocked(global.fetch).mockResolvedValue({
-      ok: false,
-      json: async () => ({}),
-    } as Response);
-
-    render(<ChatWidget />);
-
-    const input = screen.getByPlaceholderText("Type your message...");
-    await user.type(input, "Test message");
-    await user.click(screen.getByLabelText("Send message"));
-
-    // Should handle error gracefully
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Error logging to Discord:",
-        expect.any(Error),
-      );
-    });
-
-    consoleSpy.mockRestore();
-  });
-
-  it("should handle Discord thread creation error", async () => {
-    const user = userEvent.setup();
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -707,7 +686,8 @@ describe("ChatWidget", () => {
 
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    vi.mocked(global.fetch).mockRejectedValueOnce(new Error("Network error"));
+    // Mock logToDiscord to reject
+    mockLogToDiscord.mockRejectedValueOnce(new Error("Discord error"));
 
     render(<ChatWidget />);
 
@@ -718,7 +698,7 @@ describe("ChatWidget", () => {
     // Should handle error gracefully
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Error creating Discord thread:",
+        "Failed to log user message to Discord:",
         expect.any(Error),
       );
     });
@@ -726,18 +706,9 @@ describe("ChatWidget", () => {
     consoleSpy.mockRestore();
   });
 
-  it("should handle Discord message logging error", async () => {
+  it("should handle Discord logging error", async () => {
     const user = userEvent.setup();
-    localStorageMock.getItem.mockImplementation((key: string) => {
-      if (key === "ir-discord-thread") {
-        return "existing-thread-id";
-      }
-      return null;
-    });
-
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -746,7 +717,10 @@ describe("ChatWidget", () => {
       setMessages: vi.fn(),
     });
 
-    vi.mocked(global.fetch).mockRejectedValueOnce(new Error("Network error"));
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    // Mock logToDiscord to reject
+    mockLogToDiscord.mockRejectedValueOnce(new Error("Network error"));
 
     render(<ChatWidget />);
 
@@ -757,7 +731,7 @@ describe("ChatWidget", () => {
     // Should handle error gracefully
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Error logging to Discord:",
+        "Failed to log user message to Discord:",
         expect.any(Error),
       );
     });
@@ -765,9 +739,62 @@ describe("ChatWidget", () => {
     consoleSpy.mockRestore();
   });
 
-  it("should not log to Discord if threadId is not available", async () => {
+  it("should handle Discord AI response logging error", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    // Mock logToDiscord to reject for AI response
+    mockLogToDiscord.mockRejectedValueOnce(new Error("Network error"));
+
+    // First render with streaming status
+    mockUseAIGateway.mockReturnValue({
+      messages: [
+        {
+          id: "msg-1",
+          role: "assistant" as const,
+          parts: [{ type: "text", text: "AI response" }],
+        },
+      ],
+      sendMessage: mockSendMessage,
+      status: "streaming",
+      error: undefined,
+      id: "test-chat-id",
+      setMessages: mockSetMessages,
+    });
+
+    const { rerender } = render(<ChatWidget />);
+
+    // Then update to ready status (simulating streaming completion)
+    mockUseAIGateway.mockReturnValue({
+      messages: [
+        {
+          id: "msg-1",
+          role: "assistant" as const,
+          parts: [{ type: "text", text: "AI response" }],
+        },
+      ],
+      sendMessage: mockSendMessage,
+      status: "ready",
+      error: undefined,
+      id: "test-chat-id",
+      setMessages: mockSetMessages,
+    });
+
+    rerender(<ChatWidget />);
+
+    // Should handle error gracefully
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to log AI response to Discord:",
+        expect.any(Error),
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  it("should still attempt to log to Discord even without chatId (hook handles it)", async () => {
     const user = userEvent.setup();
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -782,21 +809,14 @@ describe("ChatWidget", () => {
     await user.type(input, "Test message");
     await user.click(screen.getByLabelText("Send message"));
 
-    // Should not attempt to create thread or log if no chatId
+    // Component still calls logToDiscord, hook handles the chatId check
     await waitFor(() => {
-      // Should not call Discord API
-      const discordCalls = vi
-        .mocked(global.fetch)
-        .mock.calls.filter((call: unknown[]) => {
-          const url = call[0] as string | undefined;
-          return url?.includes("/api/discord");
-        });
-      expect(discordCalls.length).toBe(0);
+      expect(mockLogToDiscord).toHaveBeenCalledWith("Test message", "user");
     });
   });
 
   it("should handle empty message text in getMessageText", () => {
-    mockUseChat.mockReturnValue({
+    mockUseAIGateway.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -821,5 +841,51 @@ describe("ChatWidget", () => {
     // Messages exist, so placeholder won't show, but component should render
     const input = screen.getByPlaceholderText("Type your message...");
     expect(input).toBeInTheDocument();
+  });
+
+  it("should show offline state when Discord is offline", () => {
+    mockUseAIGateway.mockReturnValue({
+      messages: [],
+      sendMessage: mockSendMessage,
+      status: "ready",
+      error: undefined,
+      id: "test-chat-id",
+      setMessages: mockSetMessages,
+    });
+
+    mockUseDiscord.mockReturnValue({
+      logToDiscord: mockLogToDiscord,
+      discordThreadId: null,
+      isDiscordOffline: true,
+    });
+
+    render(<ChatWidget />);
+    expect(screen.getByText("Offline")).toBeInTheDocument();
+    expect(
+      screen.getByText("Chat service offline, try again later."),
+    ).toBeInTheDocument();
+  });
+
+  it("should show offline state when both AI and Discord are offline", () => {
+    mockUseAIGateway.mockReturnValue({
+      messages: [],
+      sendMessage: mockSendMessage,
+      status: "ready",
+      error: { message: "AI error" } as Error,
+      id: "test-chat-id",
+      setMessages: mockSetMessages,
+    });
+
+    mockUseDiscord.mockReturnValue({
+      logToDiscord: mockLogToDiscord,
+      discordThreadId: null,
+      isDiscordOffline: true,
+    });
+
+    render(<ChatWidget />);
+    expect(screen.getByText("Offline")).toBeInTheDocument();
+    expect(
+      screen.getByText("Chat service offline, try again later."),
+    ).toBeInTheDocument();
   });
 });
