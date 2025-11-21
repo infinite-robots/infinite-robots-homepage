@@ -69,21 +69,9 @@ export function ChatWidget() {
     if (typeof window !== "undefined" && !hasLoadedPreviousMessages) {
       try {
         const stored = localStorage.getItem(STORED_MESSAGES_KEY);
-        console.log("[ChatWidget] Loading from localStorage:", {
-          hasStored: !!stored,
-          storedLength: stored ? JSON.parse(stored).length : 0,
-        });
         if (stored) {
           const parsed = JSON.parse(stored) as StoredMessage[];
           if (Array.isArray(parsed) && parsed.length > 0) {
-            console.log("[ChatWidget] Loaded previousMessages:", {
-              count: parsed.length,
-              messages: parsed.map((m) => ({
-                role: m.role,
-                textLength: m.text.length,
-              })),
-            });
-
             // Convert to UIMessage format and add to useChat's messages array
             const previousUIMessages = parsed.map((msg) => ({
               id: `prev-${msg.id}`,
@@ -110,8 +98,8 @@ export function ChatWidget() {
             }, 100);
           }
         }
-      } catch (err) {
-        console.error("Failed to load previous messages:", err);
+      } catch (_err) {
+        //console.error("Failed to load previous messages:", err);
       }
     }
   }, [hasLoadedPreviousMessages, setMessages]);
