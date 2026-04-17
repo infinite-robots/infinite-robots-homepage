@@ -13,7 +13,7 @@ const textStyle: React.CSSProperties = {
 
 export function SlimPageHeader({ title, description }: SlimPageHeaderProps) {
   return (
-    <section className="relative flex min-h-[180px] flex-col items-center justify-center overflow-hidden py-16 text-center md:py-20">
+    <section className="relative flex min-h-[180px] flex-col items-center justify-center overflow-hidden bg-brand-surface py-16 text-center md:py-20">
       <div className="absolute inset-0 z-0">
         <Image
           src="/thinheader.jpg"
@@ -27,7 +27,7 @@ export function SlimPageHeader({ title, description }: SlimPageHeaderProps) {
       </div>
 
       <div
-        className="absolute inset-0 z-[1]"
+        className="absolute inset-0 z-1"
         style={{
           background:
             "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(0,0,0,0.45) 0%, transparent 100%)",

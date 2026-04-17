@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: "Infinite Robots — Custom AI Integration & Software Engineering",
     description:
       "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
-    url: "https://infiniterobots.com",
+    url: "https://infinite-robots.com",
     siteName: "Infinite Robots",
     type: "website",
   },
@@ -77,20 +77,20 @@ export default function RootLayout({
                 {
                   "@type": "Organization",
                   name: "Infinite Robots",
-                  url: "https://infiniterobots.com",
-                  logo: "https://infiniterobots.com/favicon.svg",
+                  url: "https://infinite-robots.com",
+                  logo: "https://infinite-robots.com/favicon.svg",
                   description:
                     "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
                   contactPoint: {
                     "@type": "ContactPoint",
                     contactType: "sales",
-                    email: "hello@infiniterobots.com",
+                    url: "https://infinite-robots.com/contact",
                   },
                 },
                 {
                   "@type": "WebSite",
                   name: "Infinite Robots",
-                  url: "https://infiniterobots.com",
+                  url: "https://infinite-robots.com",
                 },
               ],
             }),

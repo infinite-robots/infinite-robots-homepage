@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://infiniterobots.com";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://infinite-robots.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
