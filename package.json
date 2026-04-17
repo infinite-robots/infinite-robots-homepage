@@ -19,7 +19,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "ai": "^5.0.95",
     "lucide-react": "^0.460.0",
-    "next": "^16.2.4",
+    "next": "16.2.3",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
@@ -35,13 +35,13 @@
     "@vitest/coverage-v8": "^4.0.10",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
-    "happy-dom": "^20.0.10",
+    "happy-dom": "^20.8.9",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vite": "^6.4.1",
+    "vite": "^6.4.2",
     "vitest": "^4.0.10"
   }
 }
