@@ -14,6 +14,12 @@ const SERVICES: Array<{
   icon: LucideIcon;
 }> = [
   {
+    title: "Agentic Development",
+    description:
+      "Production-grade AI agents that plug into your existing stack — automating complex workflows, extracting insight from messy data, and freeing your team to focus on decisions, not busywork.",
+    icon: Bot,
+  },
+  {
     title: "Website Development",
     description:
       "Professional websites that load fast, look great, and clearly explain what you do. Designed to convert visitors into customers.",
@@ -24,12 +30,6 @@ const SERVICES: Array<{
     description:
       "Mobile apps built for real-world usage with clean design and long-term maintainability. For iOS, Android, or cross-platform.",
     icon: Smartphone,
-  },
-  {
-    title: "Agentic Development",
-    description:
-      "We craft proactive, AI-powered helpers that plug into your existing tools, handle repetitive tasks end-to-end, and flag only what needs your attention.",
-    icon: Bot,
   },
   {
     title: "Social Media Management",

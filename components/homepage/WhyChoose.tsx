@@ -1,8 +1,8 @@
 import Image from "next/image";
 
 const POINTS = [
-  "Websites built for real business goals, not just looks.",
-  "Scalable systems that won't need to be rebuilt later.",
+  "Software built for real business outcomes, not demos.",
+  "Production-grade systems that won't need to be rebuilt later.",
   "Clear, straightforward communication at every step.",
   "Long-term support — we don't disappear after launch.",
 ];

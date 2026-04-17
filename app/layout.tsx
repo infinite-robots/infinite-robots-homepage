@@ -20,9 +20,12 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Infinite Robots - Better Websites That Perform",
+  title: {
+    default: "Infinite Robots — Software That Thinks. Sites That Sell.",
+    template: "%s | Infinite Robots",
+  },
   description:
-    "Infinite Robots designs and builds high-performing websites, apps, and digital systems that help businesses grow with clarity and confidence.",
+    "Infinite Robots is a senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
   manifest: "/site.webmanifest",
   icons: {
     icon: [
@@ -33,6 +36,20 @@ export const metadata: Metadata = {
     apple: [
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
+  },
+  openGraph: {
+    title: "Infinite Robots — Software That Thinks. Sites That Sell.",
+    description:
+      "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
+    url: "https://infinite-robots.com",
+    siteName: "Infinite Robots",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Infinite Robots — Software That Thinks. Sites That Sell.",
+    description:
+      "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
   },
 };
 
@@ -50,6 +67,36 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={nunitoSans.variable} suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  name: "Infinite Robots",
+                  url: "https://infinite-robots.com",
+                  logo: "https://infinite-robots.com/favicon.svg",
+                  description:
+                    "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    contactType: "sales",
+                    url: "https://infinite-robots.com/contact",
+                  },
+                },
+                {
+                  "@type": "WebSite",
+                  name: "Infinite Robots",
+                  url: "https://infinite-robots.com",
+                },
+              ],
+            }),
+          }}
+        />
+      </head>
       <body className="bg-white font-sans text-zinc-900 antialiased transition-colors duration-300 dark:bg-brand-surface dark:text-zinc-100">
         <Script
           id="theme-init"

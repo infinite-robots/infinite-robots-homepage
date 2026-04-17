@@ -1,21 +1,23 @@
 const STEPS = [
   {
     title: "Understand Your Business",
-    description: "We learn how you operate and what growth means for you.",
+    description:
+      "We learn how you operate, review your existing systems, and identify where software or automation will have the most impact.",
   },
   {
     title: "Architect the Solution",
     description:
-      "We design the structure, user experience, and systems around your goals.",
+      "We design the architecture, integration points, and user experience around your goals — not around a template.",
   },
   {
     title: "Build & Validate",
     description:
-      "We develop clean, maintainable, well-tested software and workflows.",
+      "We develop clean, maintainable, well-tested software — and verify it works end-to-end in your environment.",
   },
   {
     title: "Launch & Support",
-    description: "We deploy, monitor, and provide ongoing improvements.",
+    description:
+      "We deploy, monitor, and stay available for ongoing improvements as your needs evolve.",
   },
 ];
 

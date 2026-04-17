@@ -41,7 +41,7 @@ export function HeroSection() {
             href="/contact"
             className="rounded-full bg-brand px-8 py-3 text-base font-semibold text-white shadow-lg shadow-black/50 transition-all duration-300 hover:bg-brand-strong hover:shadow-xl hover:shadow-black/60"
           >
-            Schedule a Consultation
+            Schedule a Free Consultation
           </Link>
         </div>
       </div>

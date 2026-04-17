@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ProfileCard } from "@/components/about/ProfileCard";
 import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Meet the team behind Infinite Robots — senior engineers building AI integrations, custom software, and automation systems for real businesses.",
+};
 
 export default function AboutPage() {
   return (
@@ -106,7 +113,10 @@ export default function AboutPage() {
                   systems we build: digital processes that run quietly in the
                   background, supporting your team without demanding attention.
                   They don&rsquo;t replace the human parts of your work — they
-                  create more space for them.
+                  create more space for them. Increasingly, that means AI agents
+                  working alongside your team — handling document processing,
+                  surfacing insights, and automating the workflows that used to
+                  require manual effort.
                 </p>
               </div>
             </div>
@@ -189,13 +199,13 @@ export default function AboutPage() {
               href="/contact"
               className="inline-flex items-center justify-center rounded-full bg-brand px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-strong"
             >
-              Book a Consultation
+              Schedule a Free Consultation
             </Link>
           </div>
         </div>
       </section>
 
-      <FooterSpeechBubble message="Let’s design the systems that keep your team moving." />
+      <FooterSpeechBubble message="Let’s design the systems and agents that keep your team moving." />
     </main>
   );
 }

@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
+
 import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
+
+export const metadata: Metadata = {
+  title: "Testimonials",
+  description:
+    "What people are saying about working with Infinite Robots.",
+};
 
 const testimonials = [
   {
@@ -81,12 +89,12 @@ export default function TestimonialsPage() {
                 </li>
               </ul>
               <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">
-                Real stories are even better. Send yours to{" "}
+                Real stories are even better. Reach out through our{" "}
                 <a
-                  href="mailto:hello@infiniterobots.com"
+                  href="/contact"
                   className="font-medium text-brand-strong underline-offset-4 transition hover:underline dark:text-brand-accent"
                 >
-                  hello@infiniterobots.com
+                  contact page
                 </a>{" "}
                 and we&apos;ll trade you a celebratory gif.
               </p>
