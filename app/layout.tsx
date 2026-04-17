@@ -21,7 +21,7 @@ const nunitoSans = Nunito_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Infinite Robots — Custom AI Integration & Software Engineering",
+    default: "Infinite Robots — Software That Thinks. Sites That Sell.",
     template: "%s | Infinite Robots",
   },
   description:
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Infinite Robots — Custom AI Integration & Software Engineering",
+    title: "Infinite Robots — Software That Thinks. Sites That Sell.",
     description:
       "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
     url: "https://infinite-robots.com",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Infinite Robots — Custom AI Integration & Software Engineering",
+    title: "Infinite Robots — Software That Thinks. Sites That Sell.",
     description:
       "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
   },
