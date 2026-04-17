@@ -1,6 +1,6 @@
 const ITEMS = [
-  "Built for Performance",
-  "Designed for Growth",
+  "Built for Production",
+  "Engineered for Scale",
   "Clear Communication",
   "Dependable Support",
 ];

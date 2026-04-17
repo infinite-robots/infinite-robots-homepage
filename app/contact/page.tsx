@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
+
 import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 import { ContactForm } from "@/components/contact/ContactForm";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Get in touch with Infinite Robots. Schedule a free consultation to discuss your project — AI integration, custom software, or anything in between.",
+};
 
 export default function ContactPage() {
   return (

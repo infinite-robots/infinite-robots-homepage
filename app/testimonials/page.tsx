@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
+
 import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
+
+export const metadata: Metadata = {
+  title: "Testimonials",
+  description:
+    "What people are saying about working with Infinite Robots.",
+};
 
 const testimonials = [
   {
