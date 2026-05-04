@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   Facebook,
@@ -12,6 +11,7 @@ import {
   Youtube,
 } from "lucide-react";
 
+import { RobotMascot } from "./RobotMascot";
 import { useTheme } from "./ThemeProvider";
 import { useChatContext } from "@/components/chat/ChatContext";
 
@@ -55,11 +55,17 @@ function ThemeToggle() {
     <div className="flex flex-col items-center gap-2 text-sm text-zinc-200 dark:text-zinc-300">
       <button
         type="button"
-        className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-medium transition-colors hover:border-white/25 hover:bg-white/10 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800/60 dark:hover:border-zinc-500 dark:hover:bg-zinc-700/80"
-        onClick={toggleTheme}
+        suppressHydrationWarning
+        className={`group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-medium transition-colors hover:border-white/25 hover:bg-white/10 cursor-pointer dark:border-zinc-700 dark:bg-zinc-800/60 dark:hover:border-zinc-500 dark:hover:bg-zinc-700/80${!isReady ? " pointer-events-none cursor-not-allowed opacity-60" : ""}`}
+        onClick={() => {
+          if (isReady) {
+            toggleTheme();
+          }
+        }}
         aria-label={toggleLabel}
         aria-pressed={theme === "dark"}
-        disabled={!isReady}
+        aria-disabled={!isReady}
+        tabIndex={!isReady ? -1 : undefined}
       >
         <Icon
           aria-hidden="true"
@@ -92,22 +98,7 @@ export function SiteFooter() {
   return (
     <footer className="bg-brand-dark pt-8 pb-16 text-zinc-300 transition-colors duration-300">
       <div className="container mx-auto flex flex-col items-center gap-10 px-6">
-        <button
-          onClick={openChat}
-          className="flex items-center gap-3 text-lg font-semibold tracking-tight text-white transition hover:opacity-90 dark:text-zinc-100 cursor-pointer"
-          aria-label="Open chat"
-        >
-          <span className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-full bg-white/10">
-            <Image
-              src="/irlogo.jpg"
-              alt="Infinite Robots logo - click to chat"
-              fill
-              sizes="256px"
-              className="object-cover"
-              priority
-            />
-          </span>
-        </button>
+        <RobotMascot onActivate={openChat} />
 
         <nav className="flex flex-wrap justify-center gap-x-5 gap-y-4 text-sm font-medium text-zinc-200 sm:gap-x-10 dark:text-zinc-300">
           {footerLinks.map((link) => (
