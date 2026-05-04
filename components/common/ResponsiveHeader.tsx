@@ -42,17 +42,18 @@ export function ResponsiveHeader() {
               toggleChat();
               setMobileOpen(false);
             }}
-            className="relative h-full w-16 shrink-0 cursor-pointer overflow-hidden transition-opacity hover:opacity-90 focus:outline-none focus:ring-0 active:outline-none"
+            className="relative inline-flex shrink-0 cursor-pointer items-center transition-opacity hover:opacity-90 focus:outline-none focus:ring-0 active:outline-none"
             style={{ outline: "none" }}
             onMouseDown={(e) => e.preventDefault()}
             aria-label="Open chat"
           >
             <Image
-              src="/irlogo.jpg"
+              src="/logo-header.png"
               alt="Infinite Robots logo - click to chat"
-              fill
-              sizes="64px"
-              className="object-cover"
+              width={1001}
+              height={164}
+              sizes="(max-width: 640px) 200px, 280px"
+              className="h-9 w-auto sm:h-10 md:h-11"
               priority
             />
             {hasNotification && (
@@ -60,17 +61,6 @@ export function ResponsiveHeader() {
                 <span className="h-2 w-2 rounded-full bg-white"></span>
               </span>
             )}
-          </button>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              toggleChat();
-              setMobileOpen(false);
-            }}
-            className="text-lg font-bold tracking-tight text-white transition-colors hover:text-zinc-200 cursor-pointer"
-            aria-label="Toggle chat"
-          >
-            Infinite Robots
           </button>
           {/* Close chat button - only show when chat is open */}
           {isOpen && (
