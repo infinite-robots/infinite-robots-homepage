@@ -78,6 +78,17 @@ export default function AboutPage() {
                   straightforward, and frankly, just the coolest person on the team."
                 imageUrl="/will.jpg"
               />
+              <ProfileCard
+                name="Stewart"
+                title="Cloud Architecture & Agentic AI Engineering"
+                bio="Stewart is a full-stack engineer with 15+ years spanning
+                  datacenters, cloud, and product — including time at AWS as a Cloud
+                  Architect. He builds the foundations and agentic AI systems behind
+                  modern apps: orchestration, graph workflows, deployment pipelines.
+                  If it needs to scale, integrate, or think for itself, that's his
+                  domain."
+                imageUrl="/stewart.jpg"
+              />
             </div>
           </div>
         </div>
