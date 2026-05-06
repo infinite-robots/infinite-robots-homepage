@@ -10,7 +10,7 @@ export function FinalCallToAction() {
           href="/contact"
           className="rounded-full bg-brand px-10 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-strong"
         >
-          Schedule a Free Consultation
+          Free Consultation
         </a>
       </div>
     </section>

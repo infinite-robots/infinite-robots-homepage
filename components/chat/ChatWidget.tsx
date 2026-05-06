@@ -89,7 +89,6 @@ export function ChatWidget() {
             // Set messages to include previous messages
             // This ensures they're in the messages array when sendMessage is called
             setMessages(previousUIMessages as typeof messages);
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setHasLoadedPreviousMessages(true);
 
             // Scroll to bottom after messages are loaded
