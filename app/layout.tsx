@@ -27,17 +27,6 @@ export const metadata: Metadata = {
   description:
     "Infinite Robots is a senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
   manifest: "/site.webmanifest",
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
-      { url: "/favicon.ico" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-  },
   openGraph: {
     title: "Infinite Robots — Software That Thinks. Sites That Sell.",
     description:
