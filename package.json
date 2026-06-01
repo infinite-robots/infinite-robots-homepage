@@ -32,7 +32,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.7.0",
-    "@vitest/coverage-v8": "^4.0.10",
+    "@vitest/coverage-v8": "^4.1.8",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
     "happy-dom": "^20.8.9",
@@ -42,6 +42,6 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "^6.4.2",
-    "vitest": "^4.0.10"
+    "vitest": "^4.1.8"
   }
 }
