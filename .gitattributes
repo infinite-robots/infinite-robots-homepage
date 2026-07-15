@@ -1,0 +1,14 @@
+# Normalize line endings to LF in the repo and in working trees.
+# Without this, Windows checkouts (core.autocrlf=true) get CRLF while Prettier
+# writes LF, so `npm run format` marks every file modified with no real change.
+* text=auto eol=lf
+
+# Binary assets — never touch
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary

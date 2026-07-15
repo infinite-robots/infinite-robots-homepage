@@ -5,10 +5,10 @@ import { DefaultChatTransport } from "ai";
 import { useMemo } from "react";
 
 /**
- * Hook for AI Gateway chat functionality
- * Handles transport setup and useChat initialization using Vercel AI Gateway
+ * Hook for chat functionality
+ * Handles transport setup and useChat initialization against /api/chat
  */
-export function useAIGateway() {
+export function useAIChat() {
   // Use default transport - simple and clean
   const transport = useMemo(() => {
     return new DefaultChatTransport({

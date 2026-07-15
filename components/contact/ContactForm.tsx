@@ -71,23 +71,6 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-2">
         <label
-          htmlFor="company"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-200"
-        >
-          Company
-        </label>
-        <input
-          id="company"
-          name="company"
-          type="text"
-          autoComplete="organization"
-          className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
-          placeholder="Company name"
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label
           htmlFor="project-details"
           className="text-sm font-medium text-zinc-700 dark:text-zinc-200"
         >

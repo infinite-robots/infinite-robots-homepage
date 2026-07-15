@@ -20,6 +20,7 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://infinite-robots.com"),
   title: {
     default: "Infinite Robots — Software That Thinks. Sites That Sell.",
     template: "%s | Infinite Robots",

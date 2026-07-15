@@ -3,9 +3,7 @@
 interface ContactFormData {
   name: string;
   email: string;
-  company: string;
   projectDetails: string;
-  referralSource?: string;
 }
 
 export async function submitContactForm(formData: FormData) {
@@ -20,9 +18,7 @@ export async function submitContactForm(formData: FormData) {
     const data: ContactFormData = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
-      company: formData.get("company") as string,
       projectDetails: formData.get("projectDetails") as string,
-      referralSource: (formData.get("referralSource") as string) || undefined,
     };
 
     // Basic validation
@@ -48,24 +44,10 @@ export async function submitContactForm(formData: FormData) {
               inline: true,
             },
             {
-              name: "Company",
-              value: data.company || "Not provided",
-              inline: true,
-            },
-            {
               name: "Project Details",
               value: data.projectDetails,
               inline: false,
             },
-            ...(data.referralSource
-              ? [
-                  {
-                    name: "How they heard about us",
-                    value: data.referralSource,
-                    inline: false,
-                  },
-                ]
-              : []),
           ],
           timestamp: new Date().toISOString(),
         },
@@ -82,7 +64,12 @@ export async function submitContactForm(formData: FormData) {
     });
 
     if (!response.ok) {
-      throw new Error(`Discord webhook failed: ${response.statusText}`);
+      // Discord explains the failure in the body; statusText alone can't
+      // distinguish a deleted webhook from a malformed URL.
+      const details = await response.text().catch(() => "");
+      throw new Error(
+        `Discord webhook failed: ${response.status} ${response.statusText} ${details}`,
+      );
     }
 
     return { success: true };
