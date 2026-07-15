@@ -1,8 +1,4 @@
-import {
-  Handshake,
-  Milestone,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Handshake, Milestone, SlidersHorizontal } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 

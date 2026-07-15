@@ -1,13 +1,13 @@
-## Infinite Robots homepage
+# Infinite Robots homepage
 
-This is a [Next.js](https://nextjs.org) project for the Infinite Robots homepage.
+The [Next.js](https://nextjs.org) marketing site for Infinite Robots, including the AI chat widget.
 
 ## Prerequisites
 
-- Node.js v24.11.1 (specified in `.nvmrc`)
-- npm 11.6.2+
+- Node.js 24 (see `.nvmrc`; enforced by `engines.node`)
+- npm 11+
 
-If you use [nvm](https://github.com/nvm-sh/nvm), you can install and use the correct Node version:
+If you use [nvm](https://github.com/nvm-sh/nvm):
 
 ```bash
 nvm install
@@ -16,58 +16,65 @@ nvm use
 
 ## Environment Variables
 
-Create a `.env.local` file in the root directory with the following:
+Create a `.env.local` file in the root directory:
 
 ```bash
-DISCORD_WEBHOOK_URL=your_url
+# AI chat widget — Anthropic API key (console.anthropic.com)
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Discord — chat transcripts are logged to a thread per conversation
 DISCORD_BOT_TOKEN=your_discord_bot_token
 DISCORD_CHANNEL_ID=your_channel_id
-AI_GATEWAY_API_KEY=your_vercel_ai_gateway_api_key
+
+# Discord — contact form submissions
+DISCORD_WEBHOOK_URL=your_webhook_url
+
+# Canonical site origin, used for robots.txt and sitemap
+# Defaults to https://infinite-robots.com when unset
+NEXT_PUBLIC_BASE_URL=https://infinite-robots.com
 ```
 
-## Running the Development Server
+The same variables must be set in the Vercel project for deployed environments.
 
-First, run the development server:
-Install dependencies:
+## Getting Started
 
 ```bash
 npm install
-```
-
-Run the development server:
-
-```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script                 | Purpose                             |
+| ---------------------- | ----------------------------------- |
+| `npm run dev`          | Start the development server        |
+| `npm run build`        | Production build                    |
+| `npm start`            | Serve the production build          |
+| `npm run lint`         | ESLint over the project             |
+| `npm run lint:fix`     | ESLint with autofix                 |
+| `npm run typecheck`    | Type-check without emitting         |
+| `npm run test`         | Vitest in watch mode, with coverage |
+| `npm run test:run`     | Vitest once (used by CI)            |
+| `npm run format`       | Format with Prettier                |
+| `npm run format:check` | Check formatting without writing    |
 
-## Code Formatting
+A pre-commit hook runs `lint-staged` over staged files. CI runs lint, typecheck, tests, and build on every pull request.
 
-This project uses Prettier for code formatting. Format your code with:
+## Chat Architecture
 
-```bash
-npm run format        # Format all files
-npm run format:check  # Check formatting without making changes
-```
+The chat widget in the header has two independent paths — neither depends on the other:
 
-VS Code will automatically format on save if you have Prettier extension installed.
+1. **AI response** — `ChatWidget` → `useAIChat` → `POST /api/chat` → Anthropic (via the [AI SDK](https://ai-sdk.dev) `@ai-sdk/anthropic` provider), streamed back to the browser.
+2. **Discord logging** — `useDiscord` → `/api/discord/thread` and `/api/discord/message`, which mirror each conversation into a Discord thread. This is write-only; nothing comes back from Discord to the site.
 
-## Learn More
+Because they are independent, Discord messages arriving does not imply the AI path is healthy. The widget shows "Offline" if _either_ path fails.
 
-To learn more about Next.js, take a look at the following resources:
+Requests go directly to the Anthropic API. The Vercel AI Gateway is intentionally not used — it requires paid Vercel credits to forward to your own key (BYOK), which adds cost and a failure point for no benefit here.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Errors during streaming surface after the HTTP response has already begun, so they are logged in `/api/chat` via the `onError` handler rather than the surrounding `try`/`catch`. Check the Vercel runtime logs for `Chat stream error:` when the widget goes offline.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployed on [Vercel](https://vercel.com). Pushes to `main` deploy automatically; pull requests get preview deployments.

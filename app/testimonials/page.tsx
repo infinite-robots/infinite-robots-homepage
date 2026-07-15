@@ -5,8 +5,7 @@ import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 
 export const metadata: Metadata = {
   title: "Testimonials",
-  description:
-    "What people are saying about working with Infinite Robots.",
+  description: "What people are saying about working with Infinite Robots.",
 };
 
 const testimonials = [

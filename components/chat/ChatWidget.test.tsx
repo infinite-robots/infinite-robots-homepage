@@ -3,8 +3,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ChatWidget } from "./ChatWidget";
 
-// Type for useAIGateway return value
-type UseAIGatewayReturn = {
+// Type for useAIChat return value
+type UseAIChatReturn = {
   messages: Array<{
     id: string;
     role: "user" | "assistant";
@@ -37,33 +37,29 @@ Object.defineProperty(window, "localStorage", {
   writable: true,
 });
 
-// Mock the useAIGateway hook - NEVER make real AI API calls in tests
+// Mock the useAIChat hook - NEVER make real AI API calls in tests
 const mockSendMessage = vi.fn();
 const mockSetMessages = vi.fn();
-const mockUseAIGateway = vi.fn(
-  (): UseAIGatewayReturn => ({
-    messages: [],
-    sendMessage: mockSendMessage,
-    status: "ready",
-    error: undefined,
-    id: "test-chat-id",
-    setMessages: mockSetMessages,
-  }),
-);
+const mockUseAIChat = vi.fn((): UseAIChatReturn => ({
+  messages: [],
+  sendMessage: mockSendMessage,
+  status: "ready",
+  error: undefined,
+  id: "test-chat-id",
+  setMessages: mockSetMessages,
+}));
 
-vi.mock("@/hooks/useAIGateway", () => ({
-  useAIGateway: () => mockUseAIGateway(),
+vi.mock("@/hooks/useAIChat", () => ({
+  useAIChat: () => mockUseAIChat(),
 }));
 
 // Mock the useDiscord hook
 const mockLogToDiscord = vi.fn(() => Promise.resolve());
-const mockUseDiscord = vi.fn(
-  (): UseDiscordReturn => ({
-    logToDiscord: mockLogToDiscord,
-    discordThreadId: null,
-    isDiscordOffline: false,
-  }),
-);
+const mockUseDiscord = vi.fn((_chatId?: string): UseDiscordReturn => ({
+  logToDiscord: mockLogToDiscord,
+  discordThreadId: null,
+  isDiscordOffline: false,
+}));
 
 vi.mock("@/hooks/useDiscord", () => ({
   useDiscord: (chatId: string | undefined) => mockUseDiscord(chatId),
@@ -86,7 +82,7 @@ describe("ChatWidget", () => {
     vi.clearAllMocks();
     localStorageMock.getItem.mockReturnValue(null);
     // Reset to default empty messages
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -134,9 +130,9 @@ describe("ChatWidget", () => {
     expect(input).toHaveValue("");
   });
 
-  it("should display messages from useAIGateway", () => {
-    // Mock useAIGateway to return messages
-    mockUseAIGateway.mockReturnValue({
+  it("should display messages from useAIChat", () => {
+    // Mock useAIChat to return messages
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -200,7 +196,7 @@ describe("ChatWidget", () => {
   });
 
   it("should show loading indicator when status is streaming", () => {
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "streaming",
@@ -217,7 +213,7 @@ describe("ChatWidget", () => {
   });
 
   it("should show offline state when error exists", () => {
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -275,7 +271,7 @@ describe("ChatWidget", () => {
     });
 
     const mockSetMessages = vi.fn();
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -314,7 +310,7 @@ describe("ChatWidget", () => {
     ];
 
     // First render with streaming status
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages,
       sendMessage: mockSendMessage,
       status: "streaming",
@@ -326,7 +322,7 @@ describe("ChatWidget", () => {
     const { rerender } = render(<ChatWidget />);
 
     // Then update to ready status (simulating streaming completion)
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages,
       sendMessage: mockSendMessage,
       status: "ready",
@@ -353,8 +349,8 @@ describe("ChatWidget", () => {
     });
   });
 
-  it("should not save chatId to localStorage (handled by useAIGateway)", () => {
-    mockUseAIGateway.mockReturnValue({
+  it("should not save chatId to localStorage (handled by useAIChat)", () => {
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -365,7 +361,7 @@ describe("ChatWidget", () => {
 
     render(<ChatWidget />);
 
-    // ChatWidget no longer saves chatId - that's handled by useAIGateway
+    // ChatWidget no longer saves chatId - that's handled by useAIChat
     // This test verifies the component doesn't interfere
     const chatIdCalls = localStorageMock.setItem.mock.calls.filter(
       (call) => call[0] === "ir-chat-session",
@@ -375,7 +371,7 @@ describe("ChatWidget", () => {
 
   it("should log user message to Discord when sending", async () => {
     const user = userEvent.setup();
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -400,7 +396,7 @@ describe("ChatWidget", () => {
 
   it("should log user message to Discord after sending", async () => {
     const user = userEvent.setup();
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -424,7 +420,7 @@ describe("ChatWidget", () => {
   });
 
   it("should handle getMessageText with parts array format", () => {
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -444,7 +440,7 @@ describe("ChatWidget", () => {
   });
 
   it("should handle getMessageText with string content format", () => {
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-2",
@@ -464,7 +460,7 @@ describe("ChatWidget", () => {
   });
 
   it("should handle getMessageText with array content format", () => {
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-3",
@@ -489,7 +485,7 @@ describe("ChatWidget", () => {
 
   it("should not send message when status is not ready", async () => {
     const user = userEvent.setup();
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "streaming",
@@ -512,7 +508,7 @@ describe("ChatWidget", () => {
 
   it("should log AI response to Discord when streaming completes", async () => {
     // First render with streaming status
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -530,7 +526,7 @@ describe("ChatWidget", () => {
     const { rerender } = render(<ChatWidget />);
 
     // Then update to ready status (simulating streaming completion)
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -595,7 +591,7 @@ describe("ChatWidget", () => {
     };
 
     // First render with streaming status
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: manyMessages,
       sendMessage: mockSendMessage,
       status: "streaming",
@@ -607,7 +603,7 @@ describe("ChatWidget", () => {
     const { rerender } = render(<ChatWidget />);
 
     // Then update to ready status (simulating streaming completion)
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: manyMessages,
       sendMessage: mockSendMessage,
       status: "ready",
@@ -638,7 +634,7 @@ describe("ChatWidget", () => {
 
   it("should handle Discord logging failure gracefully", async () => {
     const user = userEvent.setup();
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -671,7 +667,7 @@ describe("ChatWidget", () => {
 
   it("should handle Discord message logging failure", async () => {
     const user = userEvent.setup();
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -704,7 +700,7 @@ describe("ChatWidget", () => {
 
   it("should handle Discord logging error", async () => {
     const user = userEvent.setup();
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -742,7 +738,7 @@ describe("ChatWidget", () => {
     mockLogToDiscord.mockRejectedValueOnce(new Error("Network error"));
 
     // First render with streaming status
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -760,7 +756,7 @@ describe("ChatWidget", () => {
     const { rerender } = render(<ChatWidget />);
 
     // Then update to ready status (simulating streaming completion)
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -790,7 +786,7 @@ describe("ChatWidget", () => {
 
   it("should still attempt to log to Discord even without chatId (hook handles it)", async () => {
     const user = userEvent.setup();
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -812,7 +808,7 @@ describe("ChatWidget", () => {
   });
 
   it("should handle empty message text in getMessageText", () => {
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [
         {
           id: "msg-1",
@@ -840,7 +836,7 @@ describe("ChatWidget", () => {
   });
 
   it("should show offline state when Discord is offline", () => {
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",
@@ -863,7 +859,7 @@ describe("ChatWidget", () => {
   });
 
   it("should show offline state when both AI and Discord are offline", () => {
-    mockUseAIGateway.mockReturnValue({
+    mockUseAIChat.mockReturnValue({
       messages: [],
       sendMessage: mockSendMessage,
       status: "ready",

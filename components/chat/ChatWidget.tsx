@@ -3,7 +3,7 @@
 import { Bot, Send } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useChatContext } from "@/components/chat/ChatContext";
-import { useAIGateway } from "@/hooks/useAIGateway";
+import { useAIChat } from "@/hooks/useAIChat";
 import { useDiscord } from "@/hooks/useDiscord";
 
 /**
@@ -46,7 +46,7 @@ export function ChatWidget() {
     number | null
   >(null);
 
-  // Use AI Gateway hook for chat functionality
+  // Use chat hook for AI functionality
   const {
     messages,
     sendMessage,
@@ -54,13 +54,13 @@ export function ChatWidget() {
     error,
     id: chatId,
     setMessages,
-  } = useAIGateway();
+  } = useAIChat();
 
   // Use Discord hook for logging
   const { logToDiscord, isDiscordOffline } = useDiscord(chatId);
 
-  // Track overall connection status (AI Gateway + Discord)
-  // Offline if either service fails (non-200 response)
+  // Track overall connection status (AI + Discord)
+  // Offline if either service fails
   const isOffline = !!error || isDiscordOffline;
 
   // Load previous messages from localStorage on mount and add them to useChat's messages array
