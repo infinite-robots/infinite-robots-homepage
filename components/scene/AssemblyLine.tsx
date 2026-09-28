@@ -189,10 +189,37 @@ function Item({ index }: { index: number }) {
   );
 }
 
+/** Loader palette, taken from the shades-wearing robot in the original hero art. */
+const COOL = {
+  body: "#1a1628",
+  trim: "#241e38",
+  ear: "#5e3a3a",
+  visor: "#a86462",
+  visorShade: "#9d585b",
+  rim: "#c7847c",
+  pupil: "#f3cbbf",
+  mouth: "#b88a92",
+  accent: "#3fa2c6",
+  light: "#64bfc2",
+};
+
+const GOGGLE_BOTTOM = 242;
+
+/** Ski-goggle lens: one rounded band with a nose-bridge notch at the bottom. */
+function gogglePath(x: number) {
+  const l = x - 31;
+  const r = x + 31;
+  const t = 222;
+  const b = GOGGLE_BOTTOM;
+  const k = 7;
+  return `M${l + k} ${t}H${r - k}Q${r} ${t} ${r} ${t + k}V${b - k}Q${r} ${b} ${r - k} ${b}H${x + 10}Q${x + 5} ${b - 7} ${x} ${b - 7}Q${x - 5} ${b - 7} ${x - 10} ${b}H${l + k}Q${l} ${b} ${l} ${b - k}V${t + k}Q${l} ${t} ${l + k} ${t}Z`;
+}
+
 /** Pops up from behind the belt and sets a fresh crate down on it. */
 function Loader() {
   const x = STATION_X.load;
   const style = station(0);
+  const goggles = gogglePath(x);
 
   return {
     back: (
@@ -203,58 +230,56 @@ function Loader() {
           width={108}
           height={140}
           rx={16}
-          fill="#3090c0"
+          fill={COOL.body}
         />
-        <rect x={x - 54} y={318} width={108} height={10} fill="#2a7fb0" />
-        <rect x={x - 10} y={274} width={20} height={14} fill="#1f6d99" />
-        <path
-          d={`M${x + 8} 212v-14l12 -10`}
-          stroke="#1f6d99"
-          strokeWidth={4}
-          fill="none"
-          strokeLinecap="round"
-        />
+        <rect x={x - 54} y={318} width={108} height={8} fill={COOL.trim} />
+        <circle cx={x - 13} cy={302} r={6.5} fill={COOL.accent} />
         <circle
-          cx={x + 21}
-          cy={186}
-          r={5}
-          fill={C.coral}
+          cx={x + 13}
+          cy={302}
+          r={6}
+          fill={COOL.light}
           className="ir-pulse"
         />
+        <rect x={x - 14} y={270} width={28} height={16} fill={COOL.trim} />
+        <ellipse cx={x - 43} cy={243} rx={15} ry={19} fill={COOL.ear} />
+        <ellipse cx={x + 43} cy={243} rx={15} ry={19} fill={COOL.ear} />
         <rect
           x={x - 44}
-          y={210}
+          y={204}
           width={88}
-          height={66}
-          rx={14}
-          fill="#48c0f0"
+          height={74}
+          rx={16}
+          fill={COOL.body}
         />
-        <rect x={x - 50} y={230} width={8} height={24} rx={3} fill="#30a8d8" />
-        <rect x={x + 42} y={230} width={8} height={24} rx={3} fill="#30a8d8" />
-        <rect x={x - 32} y={224} width={64} height={36} rx={8} fill={C.face} />
+        <path
+          d={goggles}
+          fill={COOL.visor}
+          stroke={COOL.rim}
+          strokeWidth={1.5}
+        />
+        <path
+          d={`M${x - 31} 237H${x + 31}V${GOGGLE_BOTTOM - 1}H${x - 29}Z`}
+          fill={COOL.visorShade}
+          clipPath="url(#ir-loader-goggles)"
+        />
         <g
           className="ir-blink"
-          style={{ animationDuration: "5.5s", animationDelay: "-2s" }}
+          style={{ animationDuration: "6s", animationDelay: "-2.5s" }}
         >
           <g className="ir-look">
-            <rect
-              x={x - 20}
-              y={236}
-              width={14}
-              height={9}
-              rx={3}
-              fill={C.cyan}
-            />
-            <rect
-              x={x + 6}
-              y={236}
-              width={14}
-              height={9}
-              rx={3}
-              fill={C.cyan}
-            />
+            <circle cx={x - 15} cy={230} r={2.4} fill={COOL.pupil} />
+            <circle cx={x + 15} cy={230} r={2.4} fill={COOL.pupil} />
           </g>
         </g>
+        <rect
+          x={x - 14}
+          y={258}
+          width={28}
+          height={4.5}
+          rx={2.25}
+          fill={COOL.mouth}
+        />
       </g>
     ),
     front: (
@@ -267,13 +292,14 @@ function Loader() {
           </g>
           <path
             d={`M${x - 58} 298q-12 34 30 54M${x + 58} 298q12 34 -30 54`}
-            stroke="#2a7fb0"
+            stroke={COOL.trim}
             strokeWidth={14}
             strokeLinecap="round"
             fill="none"
           />
-          <circle cx={x - 26} cy={352} r={9} fill="#48c0f0" />
-          <circle cx={x + 26} cy={352} r={9} fill="#48c0f0" />
+          <circle cx={x + 57} cy={297} r={11} fill={COOL.accent} />
+          <circle cx={x - 26} cy={352} r={9} fill={COOL.accent} />
+          <circle cx={x + 26} cy={352} r={9} fill={COOL.accent} />
         </g>
       </g>
     ),
@@ -860,6 +886,9 @@ export function AssemblyLine({ className }: { className?: string }) {
       <defs>
         <clipPath id="ir-above-belt">
           <rect x={0} y={0} width={VIEW_W} height={BELT_TOP - 1} />
+        </clipPath>
+        <clipPath id="ir-loader-goggles">
+          <path d={gogglePath(STATION_X.load)} />
         </clipPath>
         <clipPath id="ir-scanner-visor">
           <rect x={scanX - 30} y={206} width={60} height={24} rx={12} />

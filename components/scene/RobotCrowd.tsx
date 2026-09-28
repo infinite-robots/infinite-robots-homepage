@@ -376,10 +376,20 @@ function CrowdBot({ bot }: { bot: Bot }) {
   );
 }
 
+/** Indexes refer to generation order, so they shift if a layer's config changes. */
+function withTwoEyes(bots: Bot[], indexes: number[]) {
+  return bots.map((bot, index) =>
+    indexes.includes(index) ? { ...bot, eyes: "dots" as const } : bot,
+  );
+}
+
 const farBots = generateLayer(FAR);
-const midBots = generateLayer(MID);
-const nearBotsAll = generateLayer(NEAR);
-const nearBotsFramed = generateLayer({ ...NEAR, exclude: [650, 1720] });
+const midBots = withTwoEyes(generateLayer(MID), [12]);
+const nearBotsAll = withTwoEyes(generateLayer(NEAR), [4]);
+const nearBotsFramed = withTwoEyes(
+  generateLayer({ ...NEAR, exclude: [650, 1720] }),
+  [4],
+);
 
 type RobotCrowdProps = {
   /** Leave room in the middle of the near row for the assembly line. */
