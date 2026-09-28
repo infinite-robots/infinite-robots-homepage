@@ -1,180 +1,29 @@
-import { Handshake, Milestone, SlidersHorizontal } from "lucide-react";
+import { Compass, Handshake, Milestone, SlidersHorizontal } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
 import { SlimPageHeader } from "@/components/common/SlimPageHeader";
+import { IndustriesOverview } from "@/components/homepage/IndustriesOverview";
 import { ServicesNavigation } from "@/components/services/ServicesNavigation";
+import { SERVICES as services, SKILLSETS } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "AI agent development, custom software, web and app development, and marketing services. See how Infinite Robots can help your business.",
+    "Agentic AI development, harness engineering, AI integrations and MCP, AI-native engineering, custom AI software, and AEO for fintech, real estate, semiconductors, and more.",
 };
 
-const services = [
-  {
-    id: "agentic-development",
-    title: "Agentic Development",
-    description: [
-      "We build production AI agents that plug into the tools and platforms you already use — automating complex workflows, extracting insight from messy data, and giving your team clear, actionable results instead of more noise.",
-      "Engineered for reliability from day one. The kind of work where getting it right matters as much as getting it done.",
-    ],
-    lists: [
-      {
-        heading: "Best for:",
-        items: [
-          "Teams adding AI capabilities to an existing product or internal system",
-          "Workflows that involve repetitive analysis, review, or decision-making",
-          "Businesses scaling operations without scaling headcount",
-          "Founders looking for a senior engineering partner, not a chatbot vendor",
-        ],
-      },
-      {
-        heading: "Examples:",
-        items: [
-          "Automated reporting and summarization from scattered data sources",
-          "Smart onboarding and funnel flows that adapt based on user input and business rules",
-          "Inbox triage + classification + auto-reply",
-          "Quote & proposal generation",
-          "CRM data hygiene / syncing",
-        ],
-      },
-    ],
-  },
-  {
-    id: "website-development",
-    title: "Website Development",
-    description: [
-      "We build websites that highlight what makes you the right choice and turn visitors into qualified leads and customers.",
-      "Fast load times, intuitive navigation, and a structure built for conversion.",
-    ],
-    lists: [
-      {
-        heading: "Best for:",
-        items: [
-          "Businesses with an outdated or unclear website",
-          "New companies establishing an online identity",
-          'Anyone who wants a site that feels like the "grown-up" version of their business',
-        ],
-      },
-      {
-        heading: "What's Included:",
-        items: [
-          "Content structure & messaging guidance",
-          "Modern, responsive UI design",
-          "Development & deployment",
-          "Basic SEO setup, analytics, and ongoing support options",
-        ],
-      },
-    ],
-  },
-  {
-    id: "app-development",
-    title: "App Development",
-    description: [
-      "Mobile apps built for real everyday use - stable, intuitive, and maintainable over time.",
-      "Native or cross-platform depending on needs and budget.",
-    ],
-    lists: [
-      {
-        heading: "Best for:",
-        items: [
-          "Service-based businesses offering customer-facing tools",
-          "Internal company tools for teams in the field",
-          "Products that need mobile-native workflows",
-        ],
-      },
-      {
-        heading: "What's Included:",
-        items: [
-          "UX & interface design",
-          "System architecture",
-          "iOS / Android build and testing",
-          "Ongoing updates & support plans",
-        ],
-      },
-    ],
-  },
-  {
-    id: "social-media-management",
-    title: "Social Media Management",
-    description: [
-      "Consistent, professional presence - handled for you. We create a repeatable content system tailored to your voice and customer base.",
-    ],
-    lists: [
-      {
-        heading: "Best for:",
-        items: [
-          "Business owners who don't have time to post consistently",
-          "Brands needing to stay visible year-round",
-          "Local businesses wanting more inbound inquiries",
-        ],
-      },
-      {
-        heading: "What's Included:",
-        items: [
-          "Content planning & calendars",
-          "Posting & scheduling",
-          "Engagement monitoring",
-          "Monthly performance insights",
-        ],
-      },
-    ],
-  },
-  {
-    id: "ads-management",
-    title: "Ads Management",
-    description: [
-      "We build and optimize ad campaigns focused on measurable business outcomes, not vanity metrics. Clear reporting. ROI-first decisions.",
-    ],
-    lists: [
-      {
-        heading: "Best for:",
-        items: [
-          "Businesses ready to scale inquiries or sales",
-          "Companies with strong offerings but low visibility",
-          'Anyone tired of "boosting posts" and guessing',
-        ],
-      },
-      {
-        heading: "What's Included:",
-        items: [
-          "Campaign setup across Meta, Google, TikTok",
-          "Targeting & creative direction",
-          "Tracking & attribution setup",
-          "Weekly performance review & tuning",
-        ],
-      },
-    ],
-  },
-  {
-    id: "brand-and-content-strategy",
-    title: "Brand & Content Strategy",
-    description: [
-      "We clarify your message so customers immediately understand your value. No jargon. No guessing. Clear storytelling frameworks your team can reuse.",
-    ],
-    lists: [
-      {
-        heading: "Best for:",
-        items: [
-          "Rebrands",
-          "Businesses who feel like they're explaining their value over and over",
-          "Teams struggling to maintain consistency across channels",
-        ],
-      },
-      {
-        heading: "What's Included:",
-        items: [
-          "Brand voice guidelines",
-          "Message clarity & positioning frameworks",
-          "Content system your team can repeat",
-          "Optional ongoing content support",
-        ],
-      },
-    ],
-  },
-];
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@graph": services.map((service) => ({
+    "@type": "Service",
+    name: service.title,
+    description: service.summary,
+    url: `https://infinite-robots.com/services#${service.id}`,
+    provider: { "@type": "Organization", name: "Infinite Robots" },
+  })),
+};
 
 export default function ServicesPage() {
   const navItems = services.map((service) => ({
@@ -184,12 +33,16 @@ export default function ServicesPage() {
 
   return (
     <main className="bg-white text-zinc-900 dark:bg-brand-surface dark:text-zinc-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
       <SlimPageHeader
         title="Services"
         description={
           <>
-            Bring AI into your business the right way — with real engineers
-            behind it.
+            Agents, harnesses, and integrations that bring AI into your business
+            the right way, with real engineers behind them.
           </>
         }
       />
@@ -270,6 +123,39 @@ export default function ServicesPage() {
         })}
       </div>
 
+      <section id="skillsets" className="scroll-mt-32 py-20">
+        <div className="container mx-auto flex flex-col gap-10 px-6">
+          <div className="flex max-w-3xl flex-col gap-3">
+            <span className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              AI Skillsets
+            </span>
+            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+              The specialties behind every engagement.
+            </h2>
+          </div>
+          <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+            {SKILLSETS.map((skill) => {
+              const Icon = skill.icon;
+              return (
+                <div key={skill.title} className="flex gap-4">
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand-strong dark:bg-brand-accent/15 dark:text-brand-accent">
+                    <Icon aria-hidden="true" className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 className="font-semibold">{skill.title}</h3>
+                    <p className="mt-1 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+                      {skill.summary}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <IndustriesOverview />
+
       <section className="relative overflow-hidden bg-brand-surface py-24 dark:bg-white/3">
         <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-brand/10 via-transparent to-brand-accent/10 dark:from-brand/5 dark:to-brand-accent/5" />
         <div className="container relative mx-auto px-6">
@@ -286,8 +172,14 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {[
+              {
+                icon: Compass,
+                title: "AI Readiness Sprint",
+                description:
+                  "A short, focused engagement to map your highest-value AI opportunities, assess your data, and leave you with a prioritized roadmap.",
+              },
               {
                 icon: Milestone,
                 title: "Fixed-Scope Projects",
@@ -349,7 +241,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <FooterSpeechBubble message="Let’s scope the automation that will make the biggest impact." />
+      <FooterSpeechBubble message="Let’s scope the agent that will make the biggest impact." />
     </main>
   );
 }

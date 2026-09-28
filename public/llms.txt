@@ -1,0 +1,26 @@
+# Infinite Robots
+
+> Infinite Robots is a senior engineering team that helps businesses integrate AI. We build production AI agents, engineer the harness that keeps them reliable (tools, context, evals, guardrails, observability), connect models to company systems, and make businesses discoverable by AI assistants (AEO).
+
+AI power when you want it. Human expertise when you need it.
+
+## Services
+
+- [Agentic Development](https://infinite-robots.com/services#agentic-development): Production AI agents that plug into existing systems and run multi-step workflows with human approval where it counts.
+- [Harness Engineering](https://infinite-robots.com/services#harness-engineering): Tools and MCP servers, context engineering, eval suites, guardrails, human-in-the-loop, and observability for AI agents.
+- [AI Integrations & MCP](https://infinite-robots.com/services#ai-integrations): Custom MCP servers, retrieval (RAG) over company knowledge, internal copilots, and private model deployments.
+- [AI-Native Engineering](https://infinite-robots.com/services#ai-engineering-enablement): Helping engineering teams adopt coding agents with agent-ready repos, automated review, and eval-gated CI.
+- [AI-Powered Apps & Software](https://infinite-robots.com/services#custom-software): Custom web platforms, mobile apps, and internal tools with AI built in.
+- [AEO & AI-Era Growth](https://infinite-robots.com/services#aeo): Agent engine optimization so AI assistants and agents can find, cite, and act on a business.
+
+## Industries
+
+Fintech and financial services; real estate and proptech; semiconductors and advanced materials (molecular beam epitaxy, thin-film growth, metrology); scientific R&D and labs; legal and professional services; logistics and operations.
+
+## Pages
+
+- [Home](https://infinite-robots.com/)
+- [Services](https://infinite-robots.com/services)
+- [Work](https://infinite-robots.com/work): Selected work in molecular beam epitaxy and real estate finance; case studies on request.
+- [About](https://infinite-robots.com/about)
+- [Contact](https://infinite-robots.com/contact): Free consultation; we respond within one business day.

@@ -1,9 +1,10 @@
 import Image from "next/image";
 
 const POINTS = [
-  "Software built for real business outcomes, not demos.",
-  "Production-grade systems that won't need to be rebuilt later.",
-  "Clear, straightforward communication at every step.",
+  "Senior engineers who ship production systems, not prompt tinkerers.",
+  "Model-agnostic: the right model for the job, not the one we resell.",
+  "Evals and monitoring on everything we build, so you can see it works.",
+  "Clear, jargon-free communication at every step.",
   "Long-term support — we don't disappear after launch.",
 ];
 
@@ -18,7 +19,7 @@ export function WhyChoose() {
                 Why Businesses Choose Infinite Robots
               </p>
               <h2 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
-                Credibility built on long-term partnerships.
+                AI that holds up after the demo.
               </h2>
             </div>
 

@@ -1,7 +1,7 @@
 const ITEMS = [
-  "Built for Production",
-  "Engineered for Scale",
-  "Clear Communication",
+  "Agents in Production",
+  "Harness Engineered",
+  "Humans in the Loop",
   "Dependable Support",
 ];
 

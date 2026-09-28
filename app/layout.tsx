@@ -22,25 +22,25 @@ const nunitoSans = Nunito_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL("https://infinite-robots.com"),
   title: {
-    default: "Infinite Robots — Software That Thinks. Sites That Sell.",
+    default: "Infinite Robots — AI Power. Human Expertise.",
     template: "%s | Infinite Robots",
   },
   description:
-    "Infinite Robots is a senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
+    "Infinite Robots is a senior engineering team that helps businesses integrate AI: production AI agents, harness engineering, AI integrations and MCP, and AEO for fintech, real estate, semiconductors, and more.",
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "Infinite Robots — Software That Thinks. Sites That Sell.",
+    title: "Infinite Robots — AI Power. Human Expertise.",
     description:
-      "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
+      "A senior engineering team that builds production AI agents, the harnesses that keep them reliable, and the integrations that put them to work.",
     url: "https://infinite-robots.com",
     siteName: "Infinite Robots",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Infinite Robots — Software That Thinks. Sites That Sell.",
+    title: "Infinite Robots — AI Power. Human Expertise.",
     description:
-      "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
+      "A senior engineering team that builds production AI agents, the harnesses that keep them reliable, and the integrations that put them to work.",
   },
 };
 
@@ -71,7 +71,16 @@ export default function RootLayout({
                   url: "https://infinite-robots.com",
                   logo: "https://infinite-robots.com/favicon.svg",
                   description:
-                    "A senior engineering team that builds production AI integrations, custom software, and agentic automation for businesses that need it done right.",
+                    "A senior engineering team that builds production AI agents, the harnesses that keep them reliable, and the integrations that put them to work.",
+                  knowsAbout: [
+                    "Agentic AI development",
+                    "Harness engineering",
+                    "AI evaluations",
+                    "Model Context Protocol (MCP)",
+                    "Retrieval-augmented generation",
+                    "Agent engine optimization (AEO)",
+                    "AI-native software engineering",
+                  ],
                   contactPoint: {
                     "@type": "ContactPoint",
                     contactType: "sales",

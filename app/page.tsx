@@ -1,6 +1,9 @@
 import { FooterSpeechBubble } from "@/components/common/FooterSpeechBubble";
+import { FaqSection } from "@/components/homepage/FaqSection";
 import { FinalCallToAction } from "@/components/homepage/FinalCallToAction";
+import { HarnessSpotlight } from "@/components/homepage/HarnessSpotlight";
 import { HeroSection } from "@/components/homepage/HeroSection";
+import { IndustriesOverview } from "@/components/homepage/IndustriesOverview";
 import { ProcessOverview } from "@/components/homepage/ProcessOverview";
 import { ServicesOverview } from "@/components/homepage/ServicesOverview";
 import { ValueStripe } from "@/components/homepage/ValueStripe";
@@ -12,10 +15,13 @@ export default function Home() {
       <HeroSection />
       <ValueStripe />
       <ServicesOverview />
+      <HarnessSpotlight />
+      <IndustriesOverview />
       <WhyChoose />
       <ProcessOverview />
+      <FaqSection />
       <FinalCallToAction />
-      <FooterSpeechBubble message="We help you harness the power of Infinite Robots." />
+      <FooterSpeechBubble message="Beep boop. Your agents are ready when you are." />
     </main>
   );
 }
