@@ -10,7 +10,7 @@ import { useChatContext } from "@/components/chat/ChatContext";
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
-  { href: "/testimonials", label: "Testimonials" },
+  { href: "/work", label: "Work" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];

@@ -8,7 +8,7 @@ import { SlimPageHeader } from "@/components/common/SlimPageHeader";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Meet the team behind Infinite Robots — senior engineers building AI integrations, custom software, and automation systems for real businesses.",
+    "Meet the team behind Infinite Robots — senior engineers building AI agents, harness engineering, and AI integrations for real businesses.",
 };
 
 export default function AboutPage() {
@@ -16,7 +16,7 @@ export default function AboutPage() {
     <main className="bg-white text-zinc-900 dark:bg-brand-surface dark:text-zinc-100">
       <SlimPageHeader
         title="About Us"
-        description="We design and build digital systems that help businesses run smoothly, look credible, and grow at a sustainable pace, without adding operational complexity."
+        description="We're a senior engineering team that helps businesses integrate AI: agents, the harnesses that keep them reliable, and the systems they plug into."
       />
 
       <section className="border-b border-zinc-100 py-16 dark:border-zinc-800 md:py-20">
@@ -187,7 +187,10 @@ export default function AboutPage() {
                     </li>
                   </ul>
                 </div>
-                <p>We&rsquo;re not chasing trends or buzzwords.</p>
+                <p>
+                  AI moves fast. We keep up with it so you don&rsquo;t have to,
+                  and we only ship what holds up in production.
+                </p>
                 <p>We care about solving real problems in ways that last.</p>
               </div>
             </div>
@@ -202,8 +205,7 @@ export default function AboutPage() {
             the bottlenecks or opportunities are.
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-zinc-600 dark:text-zinc-300 md:text-xl">
-            If you&rsquo;d like support in improving your digital presence or
-            operations:
+            If you&rsquo;re ready to put AI to work in your operations:
           </p>
           <div className="mt-8 flex justify-center">
             <Link

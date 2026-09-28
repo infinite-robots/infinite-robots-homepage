@@ -1,5 +1,8 @@
-import Image from "next/image";
 import { ReactNode } from "react";
+
+import { Bokeh } from "@/components/scene/Bokeh";
+import { RobotCrowd } from "@/components/scene/RobotCrowd";
+import { SceneMotion } from "@/components/scene/SceneMotion";
 
 interface SlimPageHeaderProps {
   title: string;
@@ -13,28 +16,21 @@ const textStyle: React.CSSProperties = {
 
 export function SlimPageHeader({ title, description }: SlimPageHeaderProps) {
   return (
-    <section className="relative flex min-h-[180px] flex-col items-center justify-center overflow-hidden bg-brand-surface py-16 text-center md:py-20">
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/thinheader.jpg"
-          alt=""
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-          quality={75}
-        />
-      </div>
+    <section className="relative isolate flex min-h-[200px] flex-col items-center justify-center overflow-hidden bg-[#222c47] py-16 text-center md:py-20">
+      <SceneMotion className="absolute inset-0 -z-10">
+        <RobotCrowd align="center" className="absolute inset-0 h-full w-full" />
+        <Bokeh className="absolute inset-0" />
+      </SceneMotion>
 
       <div
-        className="absolute inset-0 z-1"
+        className="absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(0,0,0,0.45) 0%, transparent 100%)",
+            "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(14,19,27,0.6) 0%, transparent 100%)",
         }}
       />
 
-      <div className="container relative z-10 mx-auto flex flex-col items-center gap-4 px-6">
+      <div className="container mx-auto flex flex-col items-center gap-4 px-6">
         <div className="flex flex-col items-center gap-3">
           <h1
             className="text-3xl font-semibold tracking-tight text-zinc-100 md:text-4xl"

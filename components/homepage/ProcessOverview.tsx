@@ -1,23 +1,23 @@
 const STEPS = [
   {
-    title: "Understand Your Business",
+    title: "Discover & Map",
     description:
-      "We learn how you operate, review your existing systems, and identify where software or automation will have the most impact.",
+      "We learn how your business runs and pinpoint where agents and automation will have the biggest measurable impact, and where they won't.",
   },
   {
-    title: "Architect the Solution",
+    title: "Prototype & Evaluate",
     description:
-      "We design the architecture, integration points, and user experience around your goals — not around a template.",
+      "We build a working prototype fast, then prove it against your real data with evals before you commit to a full build.",
   },
   {
-    title: "Build & Validate",
+    title: "Harden & Ship",
     description:
-      "We develop clean, maintainable, well-tested software — and verify it works end-to-end in your environment.",
+      "We add the harness: permissions, guardrails, human approvals, and monitoring. Then we deploy into your environment.",
   },
   {
-    title: "Launch & Support",
+    title: "Operate & Improve",
     description:
-      "We deploy, monitor, and stay available for ongoing improvements as your needs evolve.",
+      "We monitor, tune, and upgrade models as the landscape shifts, so your AI keeps getting better instead of drifting.",
   },
 ];
 
@@ -30,7 +30,7 @@ export function ProcessOverview() {
             How We Work
           </p>
           <h2 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
-            A process built for clarity and momentum.
+            From first idea to agents in production.
           </h2>
         </div>
 
@@ -38,7 +38,7 @@ export function ProcessOverview() {
           {STEPS.map((step, index) => (
             <div key={step.title} className="flex flex-col gap-4 px-6 py-8">
               <div className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                {index + 1 < 10 ? `${index + 1}` : index + 1}
+                {index + 1}
                 <span className="mx-2 text-zinc-300 dark:text-zinc-600">
                   &mdash;
                 </span>

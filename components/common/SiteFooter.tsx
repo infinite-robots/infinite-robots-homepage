@@ -18,7 +18,7 @@ import { useChatContext } from "@/components/chat/ChatContext";
 const footerLinks = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
-  { label: "Testimonials", href: "/testimonials" },
+  { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
