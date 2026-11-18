@@ -89,6 +89,18 @@ export default function AboutPage() {
                   domain."
                 imageUrl="/stewart.jpg"
               />
+              <ProfileCard
+                name="Nicholas"
+                title="Agentic AI &amp; Harness Engineering"
+                bio="Nicholas builds the agents and the harnesses that keep them
+                  honest: multi-agent planners, retrieval pipelines, and the eval
+                  suites that decide what's allowed to ship. He's been shipping
+                  production systems since 2017, including a sync service that
+                  handles over a billion messages a month. When an agent says
+                  it's done, Nicholas is the one who checks."
+                imageUrl="/nicholas.jpg"
+                href="https://nicholashopper.com"
+              />
             </div>
           </div>
         </div>

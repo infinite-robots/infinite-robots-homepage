@@ -5,9 +5,17 @@ interface ProfileCardProps {
   title: string;
   bio: string;
   imageUrl?: string;
+  /** Personal site. When set, the name links to it. */
+  href?: string;
 }
 
-export function ProfileCard({ name, title, bio, imageUrl }: ProfileCardProps) {
+export function ProfileCard({
+  name,
+  title,
+  bio,
+  imageUrl,
+  href,
+}: ProfileCardProps) {
   return (
     <article className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-zinc-50 p-6 shadow-sm transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/50 md:flex-row md:gap-5">
       <div className="shrink-0">
@@ -30,7 +38,16 @@ export function ProfileCard({ name, title, bio, imageUrl }: ProfileCardProps) {
       <div className="flex flex-1 flex-col gap-2">
         <div>
           <h3 className="text-lg font-semibold tracking-tight md:text-xl">
-            {name}
+            {href ? (
+              <a
+                href={href}
+                className="underline-offset-4 transition-colors hover:text-brand hover:underline"
+              >
+                {name}
+              </a>
+            ) : (
+              name
+            )}
           </h3>
           <p className="mt-0.5 text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400 md:text-sm">
             {title}
