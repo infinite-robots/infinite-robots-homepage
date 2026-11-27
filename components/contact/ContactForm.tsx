@@ -1,16 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { submitContactForm } from "@/app/actions/contact";
+import { HONEYPOT_FIELD, STARTED_AT_FIELD } from "@/lib/contact-spam";
 
 export function ContactForm() {
   const [status, setStatus] = useState<{
     type: "idle" | "loading" | "success" | "error";
     message?: string;
   }>({ type: "idle" });
+  // Recorded after mount (not during render) so it reflects when the visitor
+  // actually saw the form; the server drops submissions that come too fast.
+  const startedAt = useRef<number | null>(null);
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
 
   async function handleSubmit(formData: FormData) {
     setStatus({ type: "loading" });
+    if (startedAt.current !== null) {
+      formData.set(STARTED_AT_FIELD, String(startedAt.current));
+    }
 
     const result = await submitContactForm(formData);
 
@@ -33,6 +44,21 @@ export function ContactForm() {
       action={handleSubmit}
       className="mt-10 mx-auto max-w-3xl space-y-8"
     >
+      {/* Honeypot: hidden from people and screen readers, irresistible to bots. */}
+      <div
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-px w-px overflow-hidden"
+      >
+        <label htmlFor={HONEYPOT_FIELD}>Website</label>
+        <input
+          id={HONEYPOT_FIELD}
+          name={HONEYPOT_FIELD}
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <div className="flex flex-col gap-2">
         <label
           htmlFor="name"
@@ -45,6 +71,7 @@ export function ContactForm() {
           name="name"
           type="text"
           autoComplete="name"
+          maxLength={200}
           required
           className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           placeholder="Your name"
@@ -63,6 +90,7 @@ export function ContactForm() {
           name="email"
           type="email"
           autoComplete="email"
+          maxLength={254}
           required
           className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           placeholder="you@company.com"
@@ -80,6 +108,7 @@ export function ContactForm() {
           id="project-details"
           name="projectDetails"
           rows={4}
+          maxLength={4000}
           required
           className="w-full resize-none rounded-xl bg-zinc-100 px-4 py-3 text-base text-zinc-900 transition duration-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           placeholder="Share a little about your goals or what you need help with."
