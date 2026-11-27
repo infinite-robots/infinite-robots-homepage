@@ -43,30 +43,30 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.1.1",
     "ai": "^7.0.183",
-    "lucide-react": "^0.460.0",
+    "lucide-react": "^0.577.0",
     "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.5",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^8.0.0",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.13",
     "@types/node": "^26.6.11",
     "@types/react": "^19.3.3",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
-    "@vitest/coverage-v8": "^4.1.12",
+    "@vitest/coverage-v8": "^5.1.2",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.4.6",
-    "happy-dom": "^20.14.6",
+    "happy-dom": "^21.0.4",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.2",
     "prettier": "^3.10.1",
     "tailwindcss": "^4.3.5",
     "typescript": "~6.0.3",
     "vite": "^8.4.0",
-    "vitest": "^4.1.12"
+    "vitest": "^5.1.2"
   }
 }
