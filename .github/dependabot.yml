@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One PR a week for routine updates; majors still get their own PRs.
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # 4.3.4 and 4.3.5 pull in ESM-only magic-string, which breaks
+      # `next dev` (Turbopack) even though `next build` passes. Later
+      # releases still come through.
+      - dependency-name: tailwindcss
+        versions: ["4.3.4", "4.3.5"]
+      - dependency-name: "@tailwindcss/postcss"
+        versions: ["4.3.4", "4.3.5"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns: ["*"]

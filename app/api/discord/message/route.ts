@@ -1,31 +1,29 @@
+import { DISCORD_API, isChatThread, isSnowflake } from "@/lib/discord";
+import {
+  createRateLimiter,
+  getClientIP,
+  jsonResponse,
+  tooManyRequests,
+} from "@/lib/rate-limit";
+
 export const runtime = "edge";
 
-function getClientIP(req: Request): string | null {
-  // Try various headers that might contain the IP
-  const forwardedFor = req.headers.get("x-forwarded-for");
-  if (forwardedFor) {
-    // x-forwarded-for can contain multiple IPs, take the first one
-    return forwardedFor.split(",")[0].trim();
-  }
+const isRateLimited = createRateLimiter({ limit: 60, windowMs: 10 * 60_000 });
 
-  const realIP = req.headers.get("x-real-ip");
-  if (realIP) {
-    return realIP;
-  }
-
-  const cfConnectingIP = req.headers.get("cf-connecting-ip"); // Cloudflare
-  if (cfConnectingIP) {
-    return cfConnectingIP;
-  }
-
-  return null;
-}
-
-// Discord message content limit (2000 characters)
+// Discord caps message content at 2000 characters; longer text (usually a
+// long AI reply) is truncated rather than rejected. Anything past
+// MAX_CONTENT_LENGTH isn't a real chat message.
 const DISCORD_MESSAGE_MAX_LENGTH = 2000;
+const MAX_CONTENT_LENGTH = 20_000;
 
 export async function POST(req: Request) {
   try {
+    // Get client IP address
+    const clientIP = getClientIP(req);
+    if (isRateLimited(clientIP ?? "unknown")) {
+      return tooManyRequests();
+    }
+
     const { threadId, content, role } = await req.json();
 
     if (!threadId || !content || !role) {
@@ -38,14 +36,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate content length (Discord limit is 2000 characters)
-    if (
-      typeof content !== "string" ||
-      content.length > DISCORD_MESSAGE_MAX_LENGTH
-    ) {
+    if (typeof content !== "string" || content.length > MAX_CONTENT_LENGTH) {
       return new Response(
         JSON.stringify({
-          error: `Content must be a string and less than ${DISCORD_MESSAGE_MAX_LENGTH} characters`,
+          error: `Content must be a string and less than ${MAX_CONTENT_LENGTH} characters`,
         }),
         {
           status: 400,
@@ -65,17 +59,23 @@ export async function POST(req: Request) {
       );
     }
 
-    const botToken = process.env.DISCORD_BOT_TOKEN;
+    if (!isSnowflake(threadId)) {
+      return jsonResponse({ error: "Invalid threadId" }, 400);
+    }
 
-    if (!botToken) {
+    const botToken = process.env.DISCORD_BOT_TOKEN;
+    const channelId = process.env.DISCORD_CHANNEL_ID;
+
+    if (!botToken || !channelId) {
       return new Response(JSON.stringify({ error: "Discord not configured" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Get client IP address
-    const clientIP = getClientIP(req);
+    if (!(await isChatThread(threadId, botToken, channelId))) {
+      return jsonResponse({ error: "Unknown thread" }, 403);
+    }
 
     // Format message for Discord
     const formattedMessage = formatDiscordMessage({
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
 
     // Post message to thread using Bot API
     const response = await fetch(
-      `https://discord.com/api/v10/channels/${threadId}/messages`,
+      `${DISCORD_API}/channels/${threadId}/messages`,
       {
         method: "POST",
         headers: {
@@ -95,6 +95,8 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           content: formattedMessage,
+          // Never let chat text ping @everyone/@here, roles or users.
+          allowed_mentions: { parse: [] },
         }),
       },
     );
@@ -126,9 +128,11 @@ function formatDiscordMessage(message: {
   role: "user" | "assistant";
   clientIP?: string | null;
 }): string {
-  if (message.role === "user") {
-    const ipLabel = message.clientIP ? ` (${message.clientIP})` : "";
-    return `**User${ipLabel}:**\n${message.content}`;
-  }
-  return `**AI Assistant:**\n${message.content}`;
+  const ipLabel = message.clientIP ? ` (${message.clientIP})` : "";
+  const header =
+    message.role === "user" ? `**User${ipLabel}:**` : `**AI Assistant:**`;
+  const formatted = `${header}\n${message.content}`;
+  return formatted.length > DISCORD_MESSAGE_MAX_LENGTH
+    ? `${formatted.slice(0, DISCORD_MESSAGE_MAX_LENGTH - 1)}…`
+    : formatted;
 }

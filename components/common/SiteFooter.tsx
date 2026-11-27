@@ -1,15 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Facebook,
-  Github,
-  Instagram,
-  Moon,
-  Sun,
-  Twitter,
-  Youtube,
-} from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 import { RobotMascot } from "./RobotMascot";
 import { useTheme } from "./ThemeProvider";
@@ -21,14 +13,6 @@ const footerLinks = [
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
-];
-
-const socialLinks = [
-  { label: "Facebook", href: "https://facebook.com", icon: Facebook },
-  { label: "Instagram", href: "https://instagram.com", icon: Instagram },
-  { label: "X (Twitter)", href: "https://x.com", icon: Twitter },
-  { label: "GitHub", href: "https://github.com", icon: Github },
-  { label: "YouTube", href: "https://youtube.com", icon: Youtube },
 ];
 
 function ThemeToggle() {
@@ -113,21 +97,6 @@ export function SiteFooter() {
         </nav>
 
         <ThemeToggle />
-
-        <div className="flex items-center justify-center gap-5 text-zinc-200 dark:text-zinc-300">
-          {socialLinks.map(({ label, href, icon: Icon }) => (
-            <a
-              key={label}
-              href={href}
-              className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 transition duration-200 hover:border-white/30 hover:bg-white/15 dark:border-zinc-700 dark:bg-zinc-800/70 dark:hover:border-zinc-500 dark:hover:bg-zinc-700"
-              aria-label={label}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Icon className="h-5 w-5 text-zinc-300 transition group-hover:text-white dark:text-zinc-200 dark:group-hover:text-zinc-100" />
-            </a>
-          ))}
-        </div>
 
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
           © {new Date().getFullYear()} Infinite Robots, LLC

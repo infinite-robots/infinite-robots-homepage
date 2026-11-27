@@ -3,7 +3,18 @@
  * Thread ID is stored client-side in localStorage, so this endpoint just creates new threads
  */
 
+import { DISCORD_API } from "@/lib/discord";
+import {
+  createRateLimiter,
+  getClientIP,
+  jsonResponse,
+  tooManyRequests,
+} from "@/lib/rate-limit";
+
 export const runtime = "edge";
+
+// A visitor normally needs one thread per browser; this only stops floods.
+const isRateLimited = createRateLimiter({ limit: 5, windowMs: 60 * 60_000 });
 
 // Discord thread type constants
 const DISCORD_THREAD_TYPE_PUBLIC = 11;
@@ -11,9 +22,20 @@ const DISCORD_AUTO_ARCHIVE_DURATION_24H = 1440; // minutes
 
 export async function POST(req: Request) {
   try {
+    if (isRateLimited(getClientIP(req) ?? "unknown")) {
+      return tooManyRequests();
+    }
+
     const { chatId, firstMessage } = await req.json();
 
-    if (!chatId) {
+    if (
+      typeof firstMessage !== "undefined" &&
+      typeof firstMessage !== "string"
+    ) {
+      return jsonResponse({ error: "firstMessage must be a string" }, 400);
+    }
+
+    if (typeof chatId !== "string" || !chatId || chatId.length > 100) {
       return new Response(JSON.stringify({ error: "chatId is required" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -37,7 +59,7 @@ export async function POST(req: Request) {
       : "New chat session started";
 
     const response = await fetch(
-      `https://discord.com/api/v10/channels/${channelId}/threads`,
+      `${DISCORD_API}/channels/${channelId}/threads`,
       {
         method: "POST",
         headers: {
@@ -50,6 +72,7 @@ export async function POST(req: Request) {
           auto_archive_duration: DISCORD_AUTO_ARCHIVE_DURATION_24H,
           message: {
             content: initialMessage,
+            allowed_mentions: { parse: [] },
           },
         }),
       },
